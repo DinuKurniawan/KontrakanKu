@@ -297,6 +297,20 @@ export default function LoginPage() {
                         <p className="text-center font-mono text-[11px] leading-5 text-[#0F1F33]/50">
                           Dengan masuk, Anda menyetujui pencatatan sesi aman selama 7 hari.
                         </p>
+
+                        <div className="border border-dashed border-[#0F1F33]/25 bg-[#FFFBF0] px-3.5 py-3 text-center">
+                          <p className="font-mono text-[11px] leading-5 text-[#0F1F33]/70">
+                            Lupa email atau kata sandi?{' '}
+                            <a
+                              href="https://wa.me/6281384634526?text=Halo%20Pengelola%2C%20saya%20lupa%20email%20atau%20kata%20sandi%20akun%20portal%20penyewa"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 font-semibold text-[#0F1F33] underline decoration-[#C8A46A] decoration-2 underline-offset-2 hover:text-[#115E59]"
+                            >
+                              <PhoneCall className="h-3 w-3" /> Hubungi admin/pemilik kontrakan
+                            </a>
+                          </p>
+                        </div>
                       </form>
 
                       <div className="mt-6 flex items-center gap-3 border-t border-dashed border-[#0F1F33]/15 pt-5 font-mono text-xs">

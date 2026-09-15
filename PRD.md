@@ -1141,6 +1141,9 @@ Public pages tidak membutuhkan authentication.
 * Password tidak pernah dikembalikan melalui API.
 * Session memiliki expiration.
 * Logout menghapus session dari database dan cookie.
+* Tidak ada fitur reset password mandiri di MVP — form login menampilkan
+  petunjuk "Lupa email atau kata sandi? Hubungi admin/pemilik kontrakan"
+  (link WA pengelola) karena kredensial penyewa dibuat dan dikelola admin.
 
 ### Route Protection
 

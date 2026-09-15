@@ -53,15 +53,14 @@ npm start
 
 ## Environment variables
 
-```env
-DATABASE_URL="postgresql://user:pass@host:5432/db?sslmode=require"
-POSTGRES_URL="postgresql://user:pass@host:5432/db?sslmode=require"
-PRISMA_DATABASE_URL="postgresql://user:pass@host:5432/db?sslmode=require"
-AUTH_SECRET="isi-min-32-karakter-rahasia"
-SESSION_COOKIE_NAME="kk_session"
-CRON_SECRET="kontrakan-cron-secret-key"
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-```
+Salin `.env.example` menjadi `.env`, lalu isi dengan nilai aslinya. **Jangan pernah menampilkan, menyalin, atau membagikan isi `.env`** — file tersebut berisi secret krusial (kredensial database, `AUTH_SECRET`, `CRON_SECRET`).
+
+Variabel yang dibutuhkan (lihat formatnya di `.env.example`):
+
+- `DATABASE_URL`, `POSTGRES_URL`, `PRISMA_DATABASE_URL`
+- `AUTH_SECRET`, `SESSION_COOKIE_NAME`
+- `CRON_SECRET`
+- `NEXT_PUBLIC_APP_URL`
 
 Catatan:
 

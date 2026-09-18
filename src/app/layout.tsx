@@ -1,21 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Instrument_Sans, JetBrains_Mono } from "next/font/google";
+import { Fraunces, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import ToastProvider from "@/components/toast-provider";
 
-const fraunces = Fraunces({
+const displayFont = Fraunces({
   variable: "--font-display",
   subsets: ["latin"],
   display: "swap",
-  weight: ["600", "700", "800", "900"],
 });
 
-const instrument = Instrument_Sans({
+const bodyFont = Plus_Jakarta_Sans({
   variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const mono = JetBrains_Mono({
@@ -27,11 +27,11 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Kelola Kontrakan — Hunian Tertata di Cilandak",
   description:
-    "Kontrakan keluarga di Cilandak — tagihan transparan, fasilitas terawat, pengelola yang bisa dihubungi langsung. Kelola tagihan & bukti transfer tanpa ribet.",
+    "Kontrakan keluarga di Cilandak — tagihan tercatat rapi, fasilitas terawat, pengelola yang bisa dihubungi langsung. Kelola tagihan & bukti transfer tanpa ribet.",
   openGraph: {
     title: "Kelola Kontrakan — Hunian Tertata di Cilandak",
     description:
-      "Kontrakan keluarga di Cilandak — tagihan transparan, fasilitas terawat, pengelola yang bisa dihubungi langsung.",
+      "Kontrakan keluarga di Cilandak — tagihan tercatat rapi, fasilitas terawat, pengelola yang bisa dihubungi langsung.",
     type: "website",
     locale: "id_ID",
   },
@@ -39,11 +39,13 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kelola Kontrakan — Hunian Tertata di Cilandak",
     description:
-      "Kontrakan keluarga di Cilandak — tagihan transparan, fasilitas terawat.",
+      "Kontrakan keluarga di Cilandak — tagihan tercatat rapi, fasilitas terawat.",
   },
 };
 
 export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
   themeColor: "#0F1F33",
 };
 
@@ -51,10 +53,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="id"
+      data-theme="light"
       suppressHydrationWarning
-      className={`${fraunces.variable} ${instrument.variable} ${mono.variable} h-full antialiased`}
+      className={`${displayFont.variable} ${bodyFont.variable} ${mono.variable} h-full antialiased`}
     >
-      <body suppressHydrationWarning className="min-h-full flex flex-col">
+      <body suppressHydrationWarning className="min-h-full w-full flex flex-col overflow-x-clip">
         {children}
         <ToastProvider />
         <Script

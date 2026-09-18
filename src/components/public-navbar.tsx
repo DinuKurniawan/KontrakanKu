@@ -3,104 +3,163 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X } from 'lucide-react'
-import Logo from './logo'
+import { Menu, X, KeyRound, ArrowUpRight } from 'lucide-react'
+
+const NAV = [
+  { label: 'Beranda', href: '/' },
+  { label: 'Unit', href: '/kontrakan' },
+  { label: 'Tentang', href: '/tentang' },
+  { label: 'FAQ', href: '/faq' },
+]
+
+export const WA_LINK =
+  'https://wa.me/6281384634526?text=Halo%20Pengelola%20Kelola%20Kontrakan%2C%20saya%20ingin%20bertanya%20seputar%20sewa%20kontrakan'
+
+export function SiteLogo({ compact = false, onDark = false }: { compact?: boolean; onDark?: boolean }) {
+  return (
+    <Link href="/" className="group flex items-center gap-2.5" aria-label="Kelola Kontrakan — Beranda">
+      <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-pine text-paper shadow-warm transition-transform duration-300 group-hover:-rotate-6">
+        <KeyRound className="h-[18px] w-[18px] -rotate-45" strokeWidth={2.2} />
+        <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-gold ring-2 ring-paper" aria-hidden />
+      </span>
+      <span className="leading-none">
+        <span className={`block font-display text-[17px] font-semibold tracking-tight ${onDark ? 'text-paper' : 'text-ink'}`}>
+          Kelola Kontrakan
+        </span>
+        {!compact && (
+          <span className={`mt-1 block font-mono text-[10px] uppercase tracking-[0.18em] ${onDark ? 'text-paper/60' : 'text-bark/80'}`}>
+            Cilandak · Est. 2018
+          </span>
+        )}
+      </span>
+    </Link>
+  )
+}
 
 export default function PublicNavbar() {
   const pathname = usePathname()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [prevPath, setPrevPath] = useState(pathname)
 
-  // Tutup menu mobile saat navigasi rute berubah
   useEffect(() => {
-    setMobileMenuOpen(false)
+    setOpen(false)
   }, [pathname])
 
-  const navLinks = [
-    { label: 'Beranda', href: '/' },
-    { label: 'Unit', href: '/kontrakan' },
-    { label: 'Tentang', href: '/tentang' },
-    { label: 'FAQ', href: '/faq' },
-  ]
+  useEffect(() => {
+    if (prevPath !== pathname) {
+      setPrevPath(pathname)
+      setOpen(false)
+    }
+  }, [pathname, prevPath])
 
-  const isActive = (href: string) => {
-    if (href === '/') return pathname === '/'
-    return pathname.startsWith(href)
-  }
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 8)
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname.startsWith(href)
 
   return (
-    <header className="bg-white/90 backdrop-blur-md border-b border-stone-200/80 sticky top-0 z-30 shadow-sm">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex min-w-0 items-center justify-between gap-2">
-        {/* Sisi Kiri: Logo */}
-        <div className="flex min-w-0 items-center">
-          <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-2.5 group">
-            <Logo size={36} className="transition group-hover:opacity-90" />
-            <span className="truncate font-bold text-base sm:text-lg text-stone-900 tracking-tight">Kontrakan</span>
-          </Link>
-        </div>
-
-        {/* Sisi Tengah: Menu Publik (Beranda & Unit) */}
-        <nav className="hidden md:flex shrink-0 items-center gap-1.5 lg:gap-2">
-          {navLinks.map((link) => {
-            const active = isActive(link.href)
-            return (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition ${
-                  active
-                    ? 'text-emerald-800 bg-emerald-50 shadow-sm ring-1 ring-inset ring-emerald-600/10'
-                    : 'text-stone-600 hover:text-emerald-800 hover:bg-stone-100/70'
-                }`}
-              >
-                {link.label}
-              </Link>
-            )
-          })}
-        </nav>
-
-        {/* Sisi Kanan: Menu Login & Mobile Toggle */}
-        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
-          <Link
-            href="/login"
-            className="inline-flex min-h-[44px] items-center justify-center whitespace-nowrap text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-3 sm:px-4 py-2 rounded-xl shadow-sm transition"
-          >
-            Masuk
-          </Link>
-
-          {/* Tombol Hamburger Mobile */}
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen((prev) => !prev)}
-            aria-label="Toggle menu"
-            className="md:hidden flex min-h-[44px] min-w-[44px] items-center justify-center p-2 text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-xl transition cursor-pointer ml-0.5 sm:ml-1"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
+    <>
+      <div className="w-full bg-pine text-paper">
+        <p className="shell flex items-center justify-center gap-2 py-2 text-center font-mono text-[10px] uppercase tracking-[0.2em] sm:justify-between sm:text-[11px]">
+          <span className="hidden items-center gap-2 text-paper/70 sm:inline-flex">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-300" />
+            Unit terawat · Cilandak, Jakarta Selatan
+          </span>
+          <span className="inline-flex items-center gap-2">
+            Respon &lt;1 jam
+            <span aria-hidden className="text-paper/40">·</span>
+            Survei hari yang sama
+          </span>
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="hidden items-center gap-1 font-semibold text-paper underline-offset-4 hover:underline sm:inline-flex">
+            0813-8463-4526 <ArrowUpRight className="h-3 w-3" />
+          </a>
+        </p>
       </div>
+      <header
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+          scrolled
+            ? 'border-b hairline bg-paper/90 shadow-warm backdrop-blur-xl'
+            : 'border-b border-transparent bg-paper'
+        }`}
+      >
+        <div className="shell flex h-[72px] w-full items-center justify-between gap-4">
+          <SiteLogo />
 
-      {/* Menu Publik Dropdown Mobile */}
-      {mobileMenuOpen && (
-        <div className="md:hidden max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-stone-200/80 bg-white/95 backdrop-blur px-4 py-3 space-y-1 shadow-sm">
-          {navLinks.map((link) => {
-            const active = isActive(link.href)
-            return (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`flex min-h-[44px] min-w-0 items-center break-words px-3 py-2.5 text-sm font-semibold rounded-xl transition ${
-                  active
-                    ? 'text-emerald-800 bg-emerald-50 ring-1 ring-inset ring-emerald-600/10'
-                    : 'text-stone-700 hover:text-emerald-800 hover:bg-stone-50'
-                }`}
-              >
-                {link.label}
-              </Link>
-            )
-          })}
+          <nav className="hidden items-center gap-1 rounded-full border hairline bg-white/70 p-1.5 backdrop-blur md:flex" aria-label="Navigasi utama">
+            {NAV.map((l) => {
+              const active = isActive(l.href)
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  aria-current={active ? 'page' : undefined}
+                  className={`inline-flex items-center rounded-full px-5 py-2 text-sm font-semibold transition-all duration-200 ${
+                    active
+                      ? 'bg-pine text-paper shadow-warm'
+                      : 'text-bark hover:bg-cream hover:text-ink'
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              )
+            })}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <Link href="/login" className="btn-elegant-primary hidden !px-6 !py-2.5 sm:inline-flex">
+              Masuk
+            </Link>
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-label={open ? 'Tutup menu' : 'Buka menu'}
+              aria-expanded={open}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border hairline bg-white text-ink md:hidden"
+            >
+              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
-      )}
-    </header>
+
+        {open && (
+          <nav
+            className="w-full border-t hairline bg-paper px-4 py-4 sm:px-6 md:hidden animate-slide-up"
+            aria-label="Navigasi mobile"
+          >
+            <div className="grid w-full gap-1.5">
+              {NAV.map((l, i) => {
+                const active = isActive(l.href)
+                return (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    className={`flex items-center justify-between rounded-2xl px-5 py-3.5 transition ${
+                      active
+                        ? 'bg-pine text-paper'
+                        : 'bg-white text-ink border hairline'
+                    }`}
+                  >
+                    <span className="flex items-center gap-3 text-[15px] font-semibold">
+                      <span className="font-mono text-[11px] text-fog">0{i + 1}</span>
+                      {l.label}
+                    </span>
+                    <ArrowUpRight className="h-4 w-4 opacity-60" />
+                  </Link>
+                )
+              })}
+              <Link href="/login" className="btn-elegant-primary mt-1 w-full !py-3.5">
+                Masuk
+              </Link>
+            </div>
+          </nav>
+        )}
+      </header>
+    </>
   )
 }

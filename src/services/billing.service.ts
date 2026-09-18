@@ -1,8 +1,8 @@
 import { invoiceRepository } from '@/repositories/invoice.repository'
 import { rentalRepository } from '@/repositories/rental.repository'
-import { assertCanAccessInvoice } from '@/lib/authorization'
 import { createInvoiceSchema, generateBatchInvoicesSchema, CreateInvoiceInput, GenerateBatchInvoicesInput } from '@/lib/validations/invoice'
 import { ActionResult, CurrentUser } from '@/types'
+import { UserRole } from '@prisma/client'
 
 export const billingService = {
   /**
@@ -20,7 +20,8 @@ export const billingService = {
 
     const { rentalId, billingPeriod, amount, dueDate, notes } = validated.data
 
-    const rental = await rentalRepository.findById(rentalId)
+    // Fetch ringan: cukup keberadaan + status (detail penuh tidak dibutuhkan di sini)
+    const rental = await rentalRepository.findStatusById(rentalId)
     if (!rental) {
       return { success: false, error: 'Data kontrak sewa tidak ditemukan.' }
     }
@@ -85,10 +86,14 @@ export const billingService = {
    */
   async getInvoiceDetail(invoiceId: string, currentUser: CurrentUser): Promise<ActionResult> {
     try {
-      await assertCanAccessInvoice(currentUser, invoiceId)
+      // SATU query: data penuh + cek kepemilikan dari hasil yang sama
+      // (bukan assert 1x + findById 1x).
       const invoice = await invoiceRepository.findById(invoiceId)
       if (!invoice) {
         return { success: false, error: 'Tagihan tidak ditemukan.' }
+      }
+      if (currentUser.role !== UserRole.ADMIN && invoice.rental.user.id !== currentUser.id) {
+        return { success: false, error: 'Akses Ditolak: Anda tidak memiliki izin untuk melihat atau membayar tagihan ini.' }
       }
       return { success: true, data: invoice }
     } catch (err: unknown) {

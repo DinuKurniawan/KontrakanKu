@@ -12,21 +12,11 @@ import {
   EyeOff,
   Loader2,
   CircleAlert,
-  ArrowUpRight,
-  Receipt,
-  FileText,
+  ArrowLeft,
   ShieldCheck,
   KeyRound,
   Check,
-  Clock3,
-  PhoneCall,
 } from 'lucide-react'
-
-const HIGHLIGHTS = [
-  { icon: Receipt, title: 'Tagihan transparan', desc: 'Nominal & jatuh tempo jelas — cek kapan saja dari HP.' },
-  { icon: FileText, title: 'Bukti terarsip', desc: 'Upload transfer, status LUNAS tercatat permanen.' },
-  { icon: ShieldCheck, title: 'Akses pribadi', desc: 'Hanya Anda yang bisa lihat tagihan & riwayat Anda.' },
-]
 
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(loginAction, undefined)
@@ -34,14 +24,12 @@ export default function LoginPage() {
   const router = useRouter()
   const redirectedRef = useRef(false)
 
-  // Toast gagal: email/password salah, validasi, rate-limit
   useEffect(() => {
     if (state?.error && !state?.success) {
       toast.error(state.error, { toastId: 'login-error' })
     }
   }, [state?.error, state?.success])
 
-  // Toast sukses admin & user, lalu redirect sesuai role
   useEffect(() => {
     if (state?.success && state?.redirectUrl && !redirectedRef.current) {
       redirectedRef.current = true
@@ -52,299 +40,185 @@ export default function LoginPage() {
       const t = setTimeout(() => router.push(target), 1200)
       return () => clearTimeout(t)
     }
-    // Reset flag jika state kembali error (user coba lagi)
     if (!state?.success) {
       redirectedRef.current = false
     }
   }, [state?.success, state?.redirectUrl, state?.message, router])
 
   return (
-    <div className="min-h-screen bg-[#FFFBF0] text-[#0F1F33] flex flex-col selection:bg-[#C8A46A]/30">
-      {/* ink rule */}
-      <div className="h-[6px] w-full bg-[#0F1F33] relative shrink-0">
-        <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-[#C8A46A]/60" />
+    <div className="flex min-h-screen w-full max-w-full flex-col overflow-x-clip bg-paper lg:flex-row">
+      {/* Left — brand panel */}
+      <div className="relative hidden w-full min-w-0 flex-col justify-between overflow-hidden border-r hairline bg-pine p-10 text-paper lg:flex lg:w-[46%] xl:w-[44%] xl:p-14">
+        <Link href="/" className="relative z-[2] flex items-center gap-2.5">
+          <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-paper text-pine">
+            <KeyRound className="h-[18px] w-[18px] -rotate-45" strokeWidth={2.2} />
+            <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-gold ring-2 ring-pine" aria-hidden />
+          </span>
+          <span className="leading-none">
+            <span className="block font-display text-[17px] font-semibold tracking-tight">Kelola Kontrakan</span>
+            <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.18em] text-paper/55">
+              Cilandak · Est. 2018
+            </span>
+          </span>
+        </Link>
+
+        <div className="relative z-[2]">
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper/55">Masuk</p>
+          <h1 className="mt-4 max-w-md font-display text-4xl font-medium leading-[1.06] tracking-tight xl:text-5xl">
+            Tagihan kontrakan, <em className="font-light italic text-goldsoft">tanpa ribet.</em>
+          </h1>
+          <p className="mt-4 max-w-sm text-[15px] leading-7 text-paper/70">
+            Cek tagihan bulanan, upload bukti transfer dari HP, dan pantau
+            status verifikasi — semua tercatat rapi.
+          </p>
+          <ul className="mt-8 space-y-3.5">
+            {['Tagihan tercatat & real-time', 'Bukti terarsip permanen', 'Verifikasi manual <24 jam'].map((t) => (
+              <li key={t} className="flex items-center gap-3 text-sm text-paper/85">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-paper/10 ring-1 ring-paper/20">
+                  <Check className="h-3.5 w-3.5 text-goldsoft" />
+                </span>
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="relative z-[2] font-mono text-[11px] uppercase tracking-[0.16em] text-paper/45">
+          Dikelola keluarga · Sejak 2018
+        </p>
       </div>
 
-      {/* Header — same identity as homepage */}
-      <header className="sticky top-0 z-30 bg-[#FFFBF0]/92 backdrop-blur-[10px] border-b-[1.5px] border-[#0F1F33]">
-        <div className="mx-auto flex h-[68px] w-full max-w-[1180px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3 group">
-            <span className="relative flex h-[40px] w-[40px] items-center justify-center rounded-[11px] bg-[#0F1F33] text-[#FFFBF0] shadow-[0_2px_10px_rgba(15,31,51,0.18)] group-hover:bg-[#115E59] transition-colors">
-              <KeyRound className="h-[18px] w-[18px] -rotate-45" strokeWidth={2.2} />
-              <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-[#C8A46A] ring-2 ring-[#FFFBF0]" aria-hidden />
-            </span>
-            <span className="leading-none">
-              <span className="block font-display text-[17px] font-[800] tracking-[-0.02em]">Kelola Kontrakan</span>
-              <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#0F1F33]/60">Cilandak · Est 2018</span>
-            </span>
-          </Link>
-
+      {/* Right — form */}
+      <div className="flex w-full min-w-0 flex-1 flex-col">
+        <div className="flex w-full items-center justify-between px-4 py-4 sm:px-8 lg:px-12">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 border border-[#E9E5DD] bg-white px-3 py-2.5 font-mono text-xs hover:border-[#0F1F33] transition"
+            className="chip font-semibold"
           >
-            <ArrowUpRight className="h-3.5 w-3.5 rotate-180" /> Beranda
+            <ArrowLeft className="h-4 w-4" /> Beranda
           </Link>
+          <span className="hidden items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-fog sm:inline-flex">
+            <ShieldCheck className="h-4 w-4 text-fern" /> Koneksi aman
+          </span>
         </div>
-      </header>
 
-      <main className="flex-1">
-        <div className="mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
-          {/* ledger eyebrow */}
-          <div className="flex flex-wrap items-center gap-3 border-b-[1.5px] border-[#0F1F33] pb-3">
-            <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em]">
-              <span className="h-2 w-2 bg-[#D93D30]" aria-hidden />
-              Buku Kontrakan — Portal Penyewa
-              <span className="hidden sm:inline text-[#0F1F33]/40"> / Masuk untuk kelola tagihan</span>
-            </span>
-            <span className="ml-auto hidden sm:inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wide text-[#0F1F33]/60">
-              <Clock3 className="h-3 w-3" /> Sesi 7 hari · HttpOnly
-            </span>
-          </div>
+        <div className="flex w-full flex-1 items-center justify-center px-4 py-8 sm:px-8 sm:py-10 lg:px-12">
+          <div className="w-full min-w-0 max-w-md lg:max-w-lg">
+            <Link href="/" className="flex items-center gap-2.5 lg:hidden">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-pine text-paper">
+                <KeyRound className="h-[18px] w-[18px] -rotate-45" />
+              </span>
+              <span className="font-display text-[17px] font-semibold tracking-tight">Kelola Kontrakan</span>
+            </Link>
 
-          <div className="grid grid-cols-12 gap-6 lg:gap-8 pt-6 sm:pt-8">
-            {/* LEFT — editorial */}
-            <div className="col-span-12 lg:col-span-7">
-              <h1 className="font-display text-[42px] sm:text-[56px] lg:text-[62px] font-[900] leading-[0.86] tracking-[-0.045em]">
-                <span className="block">Masuk.</span>
-                <span className="block text-outline">Kelola.</span>
-                <span className="block">
-                  Tertata<span className="text-[#D93D30]">.</span>
-                </span>
-              </h1>
-              <p className="mt-4 max-w-[48ch] text-[15.5px] leading-7 text-[#0F1F33]/70">
-                Portal pribadi penyewa — cek tagihan bulanan, kirim bukti transfer dari HP, dan lihat arsip cap <span className="font-semibold text-[#D93D30]">LUNAS</span> setelah diverifikasi admin. Tanpa grup WA yang tenggelam.
-              </p>
+            <p className="eyebrow mt-8 lg:mt-0">Selamat datang kembali</p>
+            <h2 className="mt-3 font-display text-4xl font-medium tracking-tight text-ink">
+              Masuk.
+            </h2>
+            <p className="mt-2.5 text-sm leading-6 text-bark">
+              Gunakan email yang terdaftar saat akad sewa.
+            </p>
 
-              <div className="mt-6 flex flex-wrap gap-2 font-mono text-[11px]">
-                <span className="inline-flex items-center gap-1.5 border border-[#0F1F33] bg-white px-2.5 py-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-[#115E59]" /> Enkripsi bcrypt 12-round
-                </span>
-                <span className="inline-flex items-center gap-1.5 bg-[#0F1F33] px-2.5 py-1.5 text-white">
-                  <Check className="h-3.5 w-3.5 text-[#C8A46A]" /> Verifikasi manusia &lt;24 jam
-                </span>
-                <a
-                  href="https://wa.me/6281384634526?text=Halo%20Pengelola%20Kelola%20Kontrakan"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 border border-[#C8A46A] bg-[#FFFBF0] px-2.5 py-1.5 hover:border-[#0F1F33] transition"
-                >
-                  <PhoneCall className="h-3 w-3" /> Butuh bantuan? WA pengelola
-                </a>
-              </div>
-
-              {/* highlights as ledger cards */}
-              <ul className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {HIGHLIGHTS.map((h) => {
-                  const Icon = h.icon
-                  return (
-                    <li key={h.title} className="border-[1.5px] border-[#0F1F33] bg-white p-3.5 flex flex-col gap-2">
-                      <span className="flex h-8 w-8 items-center justify-center bg-[#0F1F33] text-white">
-                        <Icon className="h-4 w-4" />
-                      </span>
-                      <span className="font-display text-sm font-bold leading-tight">{h.title}</span>
-                      <span className="text-xs leading-5 text-[#0F1F33]/65">{h.desc}</span>
-                    </li>
-                  )
-                })}
-              </ul>
-
-              {/* Mini kwitansi preview — visual trust */}
-              <div className="mt-6 hidden sm:block">
-                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#0F1F33]/60 mb-2">Preview setelah masuk →</p>
-                <div className="relative overflow-hidden border-[1.5px] border-[#0F1F33] bg-white shadow-[4px_4px_0_rgba(15,31,51,0.10)] max-w-[420px]">
-                  <div className="absolute left-0 top-0 bottom-0 w-[14px] bg-white border-r border-dashed border-[#0F1F33]/25 flex flex-col justify-around items-center py-2">
-                    {Array.from({ length: 8 }).map((_, i) => (
-                      <span key={i} className="h-[6px] w-[6px] rounded-full bg-[#FFFBF0] border border-[#0F1F33]/15" />
-                    ))}
-                  </div>
-                  <div className="pl-[18px]">
-                    <div className="flex items-center justify-between border-b border-[#0F1F33] px-3 py-2">
-                      <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em]">
-                        <span className="h-2 w-2 bg-[#D93D30]" /> INV-2026-09-014
-                      </span>
-                      <span className="font-mono text-[10px] bg-emerald-600 px-1.5 py-0.5 font-bold text-white">BELUM BAYAR</span>
-                    </div>
-                    <div className="px-3 py-3 space-y-1.5 text-sm">
-                      <div className="flex justify-between"><span className="font-mono text-[11px] uppercase tracking-wide text-[#0F1F33]/50">Periode</span><span className="font-mono text-xs font-semibold">September 2026</span></div>
-                      <div className="flex justify-between"><span className="font-mono text-[11px] uppercase tracking-wide text-[#0F1F33]/50">Jatuh tempo</span><span className="font-mono text-xs">10 Sep 2026</span></div>
-                      <div className="flex items-baseline justify-between border-t border-dashed border-[#0F1F33]/15 pt-2 mt-2">
-                        <span className="font-mono text-[11px] uppercase tracking-wide text-[#0F1F33]/50">Tagihan</span><span className="font-display text-lg font-[800]">Rp1.500.000</span>
-                      </div>
-                    </div>
-                    <div className="border-t-[1.5px] border-[#0F1F33] bg-[#FFFBF0] px-3 py-2 flex items-center justify-between">
-                      <span className="font-mono text-[10px] uppercase tracking-wide">Tap untuk bayar → upload bukti</span>
-                      <span className="font-mono text-[10px] text-[#0F1F33]/50">Portal penyewa</span>
-                    </div>
-                  </div>
+            {state?.error && (
+              <div role="alert" className="mt-6 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5">
+                <CircleAlert className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
+                <div className="text-sm leading-6 text-ink">
+                  <span className="font-bold">Gagal masuk — </span>
+                  {state.error}
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* RIGHT — Form card */}
-            <div className="col-span-12 lg:col-span-5 lg:pl-2">
-              <div className="relative">
-                <div className="relative overflow-hidden border-[1.5px] border-[#0F1F33] bg-white shadow-[6px_6px_0_rgba(15,31,51,0.12)]">
-                  {/* perforated */}
-                  <div className="absolute left-0 top-0 bottom-0 hidden sm:flex w-[14px] bg-white border-r border-dashed border-[#0F1F33]/25 flex-col justify-around items-center py-3">
-                    {Array.from({ length: 14 }).map((_, i) => (
-                      <span key={i} className="h-[7px] w-[7px] rounded-full bg-[#FFFBF0] border border-[#0F1F33]/15" />
-                    ))}
-                  </div>
-
-                  <div className="sm:pl-[18px]">
-                    {/* card header */}
-                    <div className="flex items-center justify-between border-b-[1.5px] border-[#0F1F33] bg-[#FFFBF0] px-4 sm:px-5 py-3">
-                      <span className="inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em]">
-                        <span className="flex h-6 w-6 items-center justify-center bg-[#0F1F33] text-white">
-                          <FileText className="h-3 w-3" />
-                        </span>
-                        Formulir Masuk
-                      </span>
-                      <span className="font-mono text-[10px] uppercase tracking-wide text-[#0F1F33]/50">No. RM-01 · 2026</span>
-                    </div>
-
-                    <div className="px-4 sm:px-6 py-6 sm:py-7">
-                      <h2 className="font-display text-[20px] font-[800] tracking-[-0.02em] leading-none">Masuk ke akun Anda</h2>
-                      <p className="mt-1.5 text-sm leading-6 text-[#0F1F33]/60">Gunakan email yang terdaftar saat akad sewa.</p>
-
-                      {state?.error && (
-                        <div className="mt-5 flex gap-2.5 border-l-[3px] border-[#D93D30] bg-[#D93D30]/[0.06] px-3.5 py-3">
-                          <CircleAlert className="mt-0.5 h-4 w-4 shrink-0 text-[#D93D30]" />
-                          <div className="text-sm leading-6 text-[#0F1F33]">
-                            <span className="font-bold">Gagal masuk — </span>
-                            <span className="text-[#0F1F33]/80">{state.error}</span>
-                          </div>
-                        </div>
-                      )}
-
-                      <form action={formAction} className="mt-6 space-y-4">
-                        <div>
-                          <label htmlFor="email" className="mb-1.5 flex items-center justify-between font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0F1F33]">
-                            <span>Alamat Email</span>
-                            <span className="text-[10px] font-normal tracking-wide text-[#0F1F33]/40">wajib</span>
-                          </label>
-                          <div className="relative">
-                            <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0F1F33]/35" />
-                            <input
-                              id="email"
-                              name="email"
-                              type="email"
-                              autoComplete="email"
-                              required
-                              placeholder="nama@email.com"
-                              defaultValue={(state as unknown as { values?: { email?: string } })?.values?.email ?? ''}
-                              aria-invalid={!!state?.fieldErrors?.email}
-                              aria-describedby={state?.fieldErrors?.email ? 'email-error' : undefined}
-                              className="block w-full border-[1.5px] border-[#0F1F33] bg-white py-[11px] pl-10 pr-3 font-mono text-sm text-[#0F1F33] placeholder:text-[#0F1F33]/30 focus:bg-[#FFFBF0] focus:outline-none focus:ring-0 transition"
-                            />
-                          </div>
-                          {state?.fieldErrors?.email && (
-                            <p id="email-error" className="mt-1.5 font-mono text-xs text-[#D93D30]">{state.fieldErrors.email[0]}</p>
-                          )}
-                        </div>
-
-                        <div>
-                          <label htmlFor="password" className="mb-1.5 flex items-center justify-between font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0F1F33]">
-                            <span>Kata Sandi</span>
-                            <span className="text-[10px] font-normal tracking-wide text-[#0F1F33]/40">min. 6 karakter</span>
-                          </label>
-                          <div className="relative">
-                            <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0F1F33]/35" />
-                            <input
-                              id="password"
-                              name="password"
-                              type={showPassword ? 'text' : 'password'}
-                              autoComplete="current-password"
-                              required
-                              placeholder="••••••••"
-                              aria-invalid={!!state?.fieldErrors?.password}
-                              aria-describedby={state?.fieldErrors?.password ? 'password-error' : undefined}
-                              className="block w-full border-[1.5px] border-[#0F1F33] bg-white py-[11px] pl-10 pr-10 font-mono text-sm text-[#0F1F33] placeholder:text-[#0F1F33]/30 focus:bg-[#FFFBF0] focus:outline-none focus:ring-0 transition"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setShowPassword(!showPassword)}
-                              className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#0F1F33]/40 hover:text-[#0F1F33] transition"
-                              tabIndex={-1}
-                              aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
-                            >
-                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
-                          </div>
-                          {state?.fieldErrors?.password && (
-                            <p id="password-error" className="mt-1.5 font-mono text-xs text-[#D93D30]">{state.fieldErrors.password[0]}</p>
-                          )}
-                        </div>
-
-                        <button
-                          type="submit"
-                          disabled={isPending}
-                          className="mt-2 inline-flex w-full items-center justify-center gap-2 bg-[#0F1F33] px-5 py-[13px] font-mono text-sm font-bold uppercase tracking-wide text-white hover:bg-[#115E59] disabled:opacity-60 disabled:cursor-not-allowed transition"
-                        >
-                          {isPending ? (
-                            <>
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                              Memverifikasi...
-                            </>
-                          ) : (
-                            <>
-                              Masuk ke Portal <ArrowUpRight className="h-4 w-4" />
-                            </>
-                          )}
-                        </button>
-
-                        <p className="text-center font-mono text-[11px] leading-5 text-[#0F1F33]/50">
-                          Dengan masuk, Anda menyetujui pencatatan sesi aman selama 7 hari.
-                        </p>
-
-                        <div className="border border-dashed border-[#0F1F33]/25 bg-[#FFFBF0] px-3.5 py-3 text-center">
-                          <p className="font-mono text-[11px] leading-5 text-[#0F1F33]/70">
-                            Lupa email atau kata sandi?{' '}
-                            <a
-                              href="https://wa.me/6281384634526?text=Halo%20Pengelola%2C%20saya%20lupa%20email%20atau%20kata%20sandi%20akun%20portal%20penyewa"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 font-semibold text-[#0F1F33] underline decoration-[#C8A46A] decoration-2 underline-offset-2 hover:text-[#115E59]"
-                            >
-                              <PhoneCall className="h-3 w-3" /> Hubungi admin/pemilik kontrakan
-                            </a>
-                          </p>
-                        </div>
-                      </form>
-
-                      <div className="mt-6 flex items-center gap-3 border-t border-dashed border-[#0F1F33]/15 pt-5 font-mono text-xs">
-                        <span className="inline-flex items-center gap-1.5 text-[#0F1F33]/60">
-                          <ShieldCheck className="h-3.5 w-3.5 text-[#115E59]" /> Koneksi aman
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* footer dotted */}
-                    <div className="border-t-[1.5px] border-[#0F1F33] bg-[#FFFBF0] px-4 sm:px-6 py-2.5 flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wide">
-                        <span className="h-1.5 w-1.5 bg-emerald-600" aria-hidden /> Buku besar disimpan permanen
-                      </span>
-                      <span className="font-mono text-[10px] text-[#0F1F33]/50">Cilandak · Jakarta</span>
-                    </div>
-                  </div>
+            <form action={formAction} className="card-dossier !transform-none mt-7 space-y-5 p-6 sm:p-7">
+              <div>
+                <label htmlFor="email" className="mb-1.5 block text-sm font-bold text-ink">
+                  Alamat email
+                </label>
+                <div className="relative">
+                  <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-fog" />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    placeholder="nama@email.com"
+                    defaultValue={(state as unknown as { values?: { email?: string } })?.values?.email ?? ''}
+                    aria-invalid={!!state?.fieldErrors?.email}
+                    className="field pl-11 !py-3.5"
+                  />
                 </div>
+                {state?.fieldErrors?.email && (
+                  <p className="mt-1.5 text-xs font-medium text-red-600">{state.fieldErrors.email[0]}</p>
+                )}
+              </div>
 
-                <p className="mt-3 text-center font-mono text-[11px] leading-4 text-[#0F1F33]/50 sm:text-left">
-                  Admin demo: <span className="font-semibold text-[#0F1F33]">admin@kontrakan.com / Admin123!</span> → /admin
+              <div>
+                <label htmlFor="password" className="mb-1.5 block text-sm font-bold text-ink">
+                  Kata sandi
+                </label>
+                <div className="relative">
+                  <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-fog" />
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    required
+                    placeholder="••••••••"
+                    className="field pl-11 pr-12 !py-3.5"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-fog transition hover:bg-cream hover:text-ink"
+                    tabIndex={-1}
+                    aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+                {state?.fieldErrors?.password && (
+                  <p className="mt-1.5 text-xs font-medium text-red-600">{state.fieldErrors.password[0]}</p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isPending}
+                className="btn-elegant-primary w-full !py-3.5 !text-[15px] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Memverifikasi...
+                  </>
+                ) : (
+                  'Masuk'
+                )}
+              </button>
+
+              <div className="rounded-2xl bg-cream/70 px-4 py-3.5 text-center">
+                <p className="text-[13px] leading-5 text-bark">
+                  Lupa email atau kata sandi?{' '}
+                  <a
+                    href="https://wa.me/6281384634526?text=Halo%20Pengelola%2C%20saya%20lupa%20email%20atau%20kata%20sandi%20akun%20saya"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold text-pine underline underline-offset-4"
+                  >
+                    Hubungi pengelola
+                  </a>
                 </p>
               </div>
-            </div>
+            </form>
+
+            <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-fog">
+              © 2026 Kelola Kontrakan · Data tidak dibagikan
+            </p>
           </div>
         </div>
-      </main>
-
-      <footer className="mt-6 border-t-[1.5px] border-[#0F1F33] bg-[#FFFBF0]">
-        <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-4 sm:px-6 lg:px-8 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-mono text-[11px] uppercase tracking-widest text-[#0F1F33]/50">© 2026 Kelola Kontrakan</p>
-          <p className="font-mono text-[11px] text-[#0F1F33]/45">Data penyewa tidak dibagikan · Audit log tercatat</p>
-        </div>
-      </footer>
+      </div>
     </div>
   )
 }

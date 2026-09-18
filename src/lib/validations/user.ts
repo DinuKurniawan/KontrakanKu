@@ -63,6 +63,27 @@ export const changePasswordSchema = z
   })
 
 /**
+ * Validasi Reset Kata Sandi Penyewa oleh Admin (dashboard admin)
+ * Admin tidak perlu tahu password lama — cukup password baru + konfirmasi.
+ */
+export const adminResetPasswordSchema = z
+  .object({
+    userId: idSchema,
+    newPassword: z
+      .string()
+      .min(1, 'Kata sandi baru wajib diisi')
+      .min(8, 'Kata sandi baru minimal 8 karakter')
+      .max(128, 'Kata sandi baru maksimal 128 karakter')
+      .regex(/[a-zA-Z]/, 'Kata sandi harus mengandung minimal satu huruf')
+      .regex(/[0-9]/, 'Kata sandi harus mengandung minimal satu angka'),
+    confirmPassword: z.string().min(1, 'Konfirmasi kata sandi wajib diisi'),
+  })
+  .refine(data => data.newPassword === data.confirmPassword, {
+    message: 'Konfirmasi kata sandi tidak cocok dengan kata sandi baru',
+    path: ['confirmPassword'],
+  })
+
+/**
  * Validasi Pembuatan Penyewa oleh Admin (PRD Sec 12 & 61)
  */
 export const adminCreateTenantSchema = z.object({
@@ -100,4 +121,5 @@ export const adminCreateTenantSchema = z.object({
 
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>
+export type AdminResetPasswordInput = z.infer<typeof adminResetPasswordSchema>
 export type AdminCreateTenantInput = z.infer<typeof adminCreateTenantSchema>

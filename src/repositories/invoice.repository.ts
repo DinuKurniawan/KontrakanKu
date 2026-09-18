@@ -31,6 +31,21 @@ export const invoiceRepository = {
     })
   },
 
+  /**
+   * Fetch ringan untuk pengajuan pembayaran: cukup status + pemilik.
+   * Dipakai agar submit tidak perlu 2x query (auth-check + findById penuh).
+   */
+  async findStatusForSubmit(id: string) {
+    return prisma.invoice.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        status: true,
+        rental: { select: { userId: true } },
+      },
+    })
+  },
+
   async create(data: {
     rentalId: string
     billingPeriod: string
@@ -140,9 +155,15 @@ export const invoiceRepository = {
    * Hanya membuat invoice untuk rental yang aktif dan belum memiliki invoice di periode tersebut.
    */
   async generateBatchInvoices(billingPeriod: string, dueDay: number, adminUserId: string) {
+    // Hanya kolom yang dipakai loop yang diambil (tanpa unit:true / user penuh)
     const activeRentals = await prisma.rental.findMany({
       where: { status: RentalStatus.ACTIVE },
-      include: { unit: true },
+      select: {
+        id: true,
+        userId: true,
+        monthlyRent: true,
+        unit: { select: { name: true } },
+      },
     })
 
     const results = {
@@ -168,6 +189,11 @@ export const invoiceRepository = {
     })
     const billedUserIds = new Set(alreadyBilled.map((inv) => inv.rental.userId))
 
+    // SATU count di luar loop (bukan per rental). Nomor di-increment lokal
+    // agar unik dalam satu batch tanpa N query berulang.
+    const cleanPeriod = billingPeriod.replace('-', '')
+    let invoiceSeq = await prisma.invoice.count()
+
     for (const rental of activeRentals) {
       // Lewati jika user ini sudah punya tagihan periode ini (di kontrak mana pun)
       if (billedUserIds.has(rental.userId)) {
@@ -176,23 +202,8 @@ export const invoiceRepository = {
       }
 
       try {
-        const existing = await prisma.invoice.findUnique({
-          where: {
-            rental_billing_period_unique: {
-              rentalId: rental.id,
-              billingPeriod,
-            },
-          },
-        })
-
-        if (existing) {
-          results.skipped++
-          continue
-        }
-
-        const count = await prisma.invoice.count()
-        const cleanPeriod = billingPeriod.replace('-', '')
-        const invoiceNumber = `INV-${cleanPeriod}-${String(count + 1).padStart(3, '0')}`
+        invoiceSeq += 1
+        const invoiceNumber = `INV-${cleanPeriod}-${String(invoiceSeq).padStart(3, '0')}`
 
         await prisma.$transaction(async (tx) => {
           const inv = await tx.invoice.create({
@@ -232,6 +243,12 @@ export const invoiceRepository = {
         results.created++
         billedUserIds.add(rental.userId)
       } catch (err: unknown) {
+        // Duplikat (rental, periode) akibat race / data yang masuk di tengah
+        // batch dianggap skip, bukan error — tanpa perlu cek findUnique per rental.
+        if (typeof err === 'object' && err !== null && 'code' in err && err.code === 'P2002') {
+          results.skipped++
+          continue
+        }
         const message = err instanceof Error ? err.message : 'Unknown error'
         results.errors.push(`Rental ID ${rental.id}: ${message}`)
       }

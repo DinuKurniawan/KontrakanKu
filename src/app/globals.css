@@ -1,230 +1,343 @@
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+
+@plugin "daisyui/theme" {
+  name: "light";
+  --color-primary: #0e5f43;
+  --color-primary-content: #ffffff;
+  --color-secondary: #1a7a54;
+  --color-secondary-content: #ffffff;
+  --color-accent: #b98a2f;
+  --color-accent-content: #ffffff;
+  --color-neutral: #16211c;
+  --color-neutral-content: #faf7f1;
+  --color-base-100: #ffffff;
+  --color-base-200: #faf7f1;
+  --color-base-300: #efe7d3;
+  --color-base-content: #16211c;
+  --color-info: #0284c7;
+  --color-info-content: #ffffff;
+  --color-success: #0e5f43;
+  --color-success-content: #ffffff;
+  --color-warning: #b98a2f;
+  --color-warning-content: #ffffff;
+  --color-error: #dc2626;
+  --color-error-content: #ffffff;
+  --rounded-box: 1.25rem;
+  --rounded-btn: 9999px;
+  --rounded-badge: 9999px;
+  --animation-btn: 0.2s;
+  --animation-input: 0.2s;
+  --btn-focus-scale: 0.98;
+  --border-btn: 1px;
+  --tab-border: 1px;
+  --tab-radius: 0.75rem;
+}
+
+@theme {
+  --color-paper: #faf7f1;
+  --color-cream: #f3edde;
+  --color-sand: #efe7d3;
+  --color-pine: #0c2b23;
+  --color-pinedeep: #081f19;
+  --color-moss: #0e5f43;
+  --color-fern: #1a7a54;
+  --color-mist: #e3efe4;
+  --color-gold: #b98a2f;
+  --color-goldsoft: #f3e7c8;
+  --color-ink: #16211c;
+  --color-bark: #4a5750;
+  --color-fog: #8a938c;
+  --color-line: #e6ddc8;
+  --shadow-warm: 0 1px 2px rgb(22 33 28 / 0.05), 0 12px 32px -12px rgb(22 33 28 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(22 33 28 / 0.06), 0 24px 48px -16px rgb(22 33 28 / 0.24);
+  --shadow-glow: 0 8px 30px -8px rgb(14 95 67 / 0.45);
+}
 
 html {
   scroll-behavior: smooth;
   color-scheme: light;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 :root {
-  --background: #FFFBF0;
-  --foreground: #0F1F33;
-  --ink: #0F1F33;
-  --paper: #FFFBF0;
-  --concrete: #E9E5DD;
-  --stamp: #D93D30;
-  --brass: #C8A46A;
-  --teal: #115E59;
+  --background: #faf7f1;
+  --foreground: #16211c;
+  --muted: #f3edde;
+  --muted-foreground: #6f7a72;
+  --border: #e6ddc8;
+  --ring: #0e5f43;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
   --font-display: var(--font-display);
   --font-sans: var(--font-body);
   --font-mono: var(--font-mono);
+  --shadow-elegant: 0 1px 2px rgb(22 33 28 / 0.05), 0 12px 32px -12px rgb(22 33 28 / 0.18);
+  --shadow-elegant-lg: 0 2px 4px rgb(22 33 28 / 0.06), 0 24px 48px -16px rgb(22 33 28 / 0.24);
+  --shadow-float: 0 10px 40px -10px rgb(12 43 35 / 0.35), 0 20px 60px -20px rgb(12 43 35 / 0.25);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
-/* Display uses Fraunces */
+.shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 100%;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 640px) {
+  .shell { padding-inline: 2rem; }
+}
+@media (min-width: 1024px) {
+  .shell { padding-inline: 2.5rem; }
+}
+
+img, video, iframe { max-width: 100%; }
+p, h1, h2, h3, h4, li, a { overflow-wrap: break-word; }
+
 .font-display {
   font-family: var(--font-display), Georgia, serif;
+  letter-spacing: -0.015em;
+  font-optical-sizing: auto;
 }
 
-input, select, textarea {
-  color: #0F1F33;
-}
+h1, h2, h3, h4 { text-wrap: balance; }
+p, li, blockquote { text-wrap: pretty; }
 
-/* Perforated ledger edge — vertical dots on left side of kwitansi */
-.perforated {
-  position: relative;
+::selection { background: #0c2b23; color: #faf7f1; }
+
+input, select, textarea { color: #16211c; }
+
+/* ————— Editorial primitives ————— */
+/* NOTE (Tailwind v4): custom classes MUST live in @layer components,
+   otherwise their unlayered @apply styles beat utilities like pl-11/pr-12
+   and input text slides under the field icons. */
+@layer components {
+
+.eyebrow {
+  @apply inline-flex items-center gap-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-moss;
 }
-.perforated::before {
+.eyebrow::before {
   content: "";
-  position: absolute;
-  left: -1px;
-  top: 0;
-  bottom: 0;
-  width: 14px;
-  background:
-    radial-gradient(circle, #FFFBF0 5px, transparent 5.5px) 0 0 / 14px 20px repeat-y,
-    linear-gradient(to right, #0F1F33 1px, transparent 1px);
-  background-repeat: repeat-y, no-repeat;
-  border-right: 1px dashed #0F1F3388;
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+.eyebrow-center::after {
+  content: "";
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+.eyebrow-on-dark { color: #cfe3d2; }
+
+.hairline { border-color: var(--color-line); }
+
+.card-dossier {
+  @apply bg-white border rounded-[1.75rem] transition-all duration-300;
+  border-color: var(--color-line);
+  box-shadow: var(--shadow-warm);
+}
+.card-dossier:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-3px);
+  border-color: #d8ccad;
 }
 
-/* Stamp ink texture via mix-blend? simple border */
 .stamp {
-  border: 2.5px solid #D93D30;
-  color: #D93D30;
-  transform: rotate(-11deg);
-  box-shadow: 0 0 0 3px rgba(217,61,48,0.08);
-  letter-spacing: 0.06em;
+  @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold;
+}
+.stamp-live {
+  background: #0c2b23;
+  color: #faf7f1;
+}
+.stamp-open {
+  background: #e3efe4;
+  color: #0e5f43;
+  border: 1px solid #bcd8bf;
+}
+.stamp-muted {
+  background: #f3edde;
+  color: #4a5750;
+  border: 1px solid var(--color-line);
 }
 
-/* Brass key shine */
-.key-shine {
-  background: linear-gradient(135deg, #C8A46A 0%, #E7C898 45%, #B8935A 100%);
+.field {
+  @apply w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none transition-all duration-200;
+  border-color: var(--color-line);
+}
+.field::placeholder { color: #a3aca4; }
+.field:focus {
+  border-color: #0e5f43;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgb(14 95 67 / 0.12);
 }
 
-/* Ledger lines for testimonial paper */
-.ledger-lines {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 27px,
-    #0F1F3314 27px,
-    #0F1F3314 28px
-  );
+.chip {
+  @apply inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[13px] font-medium transition-all duration-200;
+  border-color: var(--color-line);
+  background: #fff;
+  color: #4a5750;
+}
+.chip:hover { border-color: #0e5f43; color: #0c2b23; }
+.chip-on {
+  background: #0c2b23 !important;
+  border-color: #0c2b23 !important;
+  color: #faf7f1 !important;
 }
 
-/* Hero headline outline option */
-.text-outline {
-  -webkit-text-stroke: 1.2px #0F1F33;
-  color: transparent;
+.tick {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
-/* Animations */
-@keyframes stamp-pop {
-  0% { transform: rotate(-11deg) scale(1.4); opacity: 0; }
-  60% { transform: rotate(-11deg) scale(0.98); opacity: 1; }
-  100% { transform: rotate(-11deg) scale(1); opacity: 1; }
+/* ————— Legacy aliases (compat, new look) ————— */
+
+.card-elegant {
+  @apply bg-white border rounded-[1.75rem] transition-all duration-300;
+  border-color: var(--color-line);
+  box-shadow: var(--shadow-warm);
 }
-.animate-stamp {
-  animation: stamp-pop 560ms cubic-bezier(0.34, 1.56, 0.64, 1) 900ms both;
-}
-@media (prefers-reduced-motion: reduce) {
-  .animate-stamp { animation: none; opacity: 1; transform: rotate(-11deg) scale(1); }
-  .animate-testimonial-marquee { animation: none !important; }
+.card-elegant:hover {
+  box-shadow: var(--shadow-lift);
+  border-color: #d8ccad;
 }
 
-/* Modal entrance — pengganti class animate-in (plugin tidak terpasang) */
+.btn-elegant {
+  @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 cursor-pointer;
+  @apply px-5 py-2.5 text-sm;
+}
+.btn-elegant:active { transform: scale(0.98); }
+.btn-elegant-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 cursor-pointer px-5 py-2.5 text-sm text-white;
+  background: #0c2b23;
+  box-shadow: 0 8px 24px -8px rgb(12 43 35 / 0.5);
+}
+.btn-elegant-primary:hover { background: #14503a; box-shadow: 0 12px 32px -8px rgb(12 43 35 / 0.55); }
+.btn-elegant-outline {
+  @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 cursor-pointer px-5 py-2.5 text-sm bg-white hover:bg-cream active:bg-sand;
+  border: 1px solid var(--color-line);
+  color: #16211c;
+}
+.btn-elegant-outline:hover { border-color: #0e5f43; }
+.btn-elegant-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 cursor-pointer px-5 py-2.5 text-sm;
+  color: #4a5750;
+}
+.btn-elegant-ghost:hover { background: #efe7d3; color: #0c2b23; }
+.btn-elegant-sm { @apply px-4 py-2 text-[13px]; }
+.btn-elegant-xs { @apply px-3 py-1.5 text-xs; }
+
+.input-elegant {
+  @apply w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none transition-all duration-200;
+  border-color: var(--color-line);
+}
+.input-elegant::placeholder { color: #a3aca4; }
+.input-elegant:focus {
+  border-color: #0e5f43;
+  box-shadow: 0 0 0 4px rgb(14 95 67 / 0.12);
+}
+
+.badge-elegant {
+  @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
+}
+.badge-elegant-success { background: #e3efe4; color: #0e5f43; border: 1px solid #bcd8bf; }
+.badge-elegant-neutral { background: #f3edde; color: #4a5750; border: 1px solid var(--color-line); }
+.badge-elegant-outline { background: #fff; color: #4a5750; border: 1px solid var(--color-line); }
+
+.section-divider {
+  @apply w-full border-t;
+  border-color: var(--color-line);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, #0e5f43 0%, #1a7a54 55%, #b98a2f 115%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.container-narrow {
+  @apply mx-auto max-w-7xl;
+}
+
+} /* end @layer components */
+
+/* ————— Motion ————— */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in { animation: fade-in 0.5s ease-out both; }
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slide-up 0.5s ease-out both; }
+
+@keyframes hero-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
+.hero-zoom { animation: hero-zoom 12s ease-out both; }
+
 @keyframes modal-pop {
-  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
-.modal-pop {
-  animation: modal-pop 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-@keyframes slide-in-right {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-.slide-in-right {
-  animation: slide-in-right 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-@media (prefers-reduced-motion: reduce) {
-  .modal-pop, .slide-in-right { animation: none; }
-}
+.modal-pop { animation: modal-pop 200ms ease-out both; }
 
 @keyframes testimonial-marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to { transform: translateX(-33.3333%); }
 }
-.animate-testimonial-marquee {
-  animation: testimonial-marquee 32s linear infinite;
-}
+.animate-testimonial-marquee { animation: testimonial-marquee 48s linear infinite; }
 .testimonial-marquee-paused:hover .animate-testimonial-marquee,
 .testimonial-marquee-paused:focus-within .animate-testimonial-marquee {
   animation-play-state: paused;
 }
-@media (prefers-reduced-motion: reduce) {
-  .animate-testimonial-marquee { animation: none !important; transform: none !important; }
-}
-/* line-clamp fallback — jika plugin tailwind tidak aktif */
-.line-clamp-4 {
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
 
-/* Hero orchestrated entrance — one moment, not scattered */
-@keyframes hero-enter {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes key-swing {
-  0%,100% { transform: rotate(-11deg) translateY(0); }
-  50% { transform: rotate(-9deg) translateY(-1px); }
-}
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes header-in {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.hero-enter { animation: hero-enter 560ms cubic-bezier(0.16,1,0.3,1) both; }
-.hero-enter-1 { animation-delay: 80ms; }
-.hero-enter-2 { animation-delay: 160ms; }
-.hero-enter-3 { animation-delay: 240ms; }
-.hero-enter-4 { animation-delay: 320ms; }
-.hero-key { animation: key-swing 3.2s ease-in-out 1.2s infinite; }
-@media (prefers-reduced-motion: reduce) {
-  .hero-enter, .hero-key { animation: none; opacity: 1; transform: none; }
-}
-/* Header subtle entrance */
-header { animation: header-in 460ms cubic-bezier(0.16,1,0.3,1) both; }
-@media (prefers-reduced-motion: reduce) { header { animation: none; } }
-
-/* Scroll-driven reveal for every public section — works without JS (progressive enhancement) */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    main section,
-    main > div[class*="max-w-"],
-    div[class*="max-w-[1180px]"],
-    div[class*="max-w-[1160px]"],
-    article,
-    .reveal-on-scroll {
-      animation: fade-up 520ms cubic-bezier(0.16,1,0.3,1) both;
-      animation-timeline: view();
-      animation-range: entry 4% cover 18%;
-    }
-    /* stagger children inside grid */
-    .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-    .stagger-children > *:nth-child(2) { animation-delay: 80ms; }
-    .stagger-children > *:nth-child(3) { animation-delay: 140ms; }
-    .stagger-children > *:nth-child(4) { animation-delay: 200ms; }
-  }
-}
-@media not (prefers-reduced-motion: reduce) {
-  /* Fallback for browsers without view-timeline: SR component handles it */
-}
-
-/* Subtle hover lift — cards & buttons */
-.card-lift { transition: transform 220ms cubic-bezier(0.16,1,0.3,1), box-shadow 220ms; }
-.card-lift:hover { transform: translateY(-2px); box-shadow: 6px 6px 0 rgba(15,31,51,0.12); }
-@media (prefers-reduced-motion: reduce) {
-  .card-lift:hover { transform: none; }
-}
-/* Global micro-interactions — all public pages */
-@media (prefers-reduced-motion: no-preference) {
-  a[class*="bg-[#0F1F33]"]:hover, a[class*="bg-[#D93D30]"]:hover, button[class*="bg-[#0F1F33]"]:hover {
-    transform: translateY(-1px);
-  }
-  a:active, button:active { transform: scale(0.99); }
-  /* card hover for any bordered public card */
-  article, div[class*="border-[1.5px]"][class*="bg-white"], div[class*="border-[1.5px]"][class*="bg-[#FFFBF0]"] {
-    transition: transform 220ms cubic-bezier(0.16,1,0.3,1), box-shadow 220ms, border-color 220ms;
-  }
-  article:hover { transform: translateY(-2px); }
-}
-/* Floating WA gentle pulse — draws eye without being annoying */
-@keyframes wa-pulse {
-  0%,100% { box-shadow: 3px 3px 0 rgba(15,31,51,0.18), 0 0 0 0 rgba(37,211,102,0.0); }
-  50% { box-shadow: 3px 3px 0 rgba(15,31,51,0.18), 0 0 0 8px rgba(37,211,102,0.12); }
-}
-a[aria-label="Chat WhatsApp"] { animation: wa-pulse 2.8s ease-in-out 1.6s infinite; }
-@media (prefers-reduced-motion: reduce) { a[aria-label="Chat WhatsApp"] { animation: none; } }
-
-/* Focus visible */
 *:focus-visible {
-  outline: 2px solid #115E59;
-  outline-offset: 2px;
+  outline: 2px solid #0e5f43;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up, .animate-fade-in, .animate-slide-up, .hero-zoom, .modal-pop, .animate-testimonial-marquee {
+    animation: none !important;
+  }
+  html { scroll-behavior: auto; }
 }

@@ -5,9 +5,11 @@ import { hashPassword, verifyPassword } from '@/lib/password'
 import {
   updateProfileSchema,
   changePasswordSchema,
+  adminResetPasswordSchema,
   adminCreateTenantSchema,
   UpdateProfileInput,
   ChangePasswordInput,
+  AdminResetPasswordInput,
   AdminCreateTenantInput,
 } from '@/lib/validations/user'
 import { ActionResult } from '@/types'
@@ -90,6 +92,47 @@ export const userService = {
       return { success: true }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Gagal mengubah kata sandi'
+      return { success: false, error: message }
+    }
+  },
+
+  /**
+   * Admin Mereset Kata Sandi Penyewa (dashboard admin)
+   * Tanpa perlu password lama. Hanya untuk akun role USER.
+   */
+  async adminResetPassword(adminUserId: string, input: AdminResetPasswordInput): Promise<ActionResult> {
+    const validated = adminResetPasswordSchema.safeParse(input)
+    if (!validated.success) {
+      return {
+        success: false,
+        error: validated.error.issues[0]?.message || 'Validasi kata sandi gagal.',
+        fieldErrors: validated.error.flatten().fieldErrors,
+      }
+    }
+
+    const target = await userRepository.findWithPasswordHash(validated.data.userId)
+    if (!target) {
+      return { success: false, error: 'Pengguna tidak ditemukan.' }
+    }
+    if (target.role !== UserRole.USER) {
+      return { success: false, error: 'Hanya kata sandi akun penyewa yang dapat direset.' }
+    }
+
+    try {
+      const newHash = await hashPassword(validated.data.newPassword)
+      await userRepository.updatePassword(target.id, newHash)
+
+      await auditRepository.log({
+        action: 'PASSWORD_RESET',
+        entityType: 'User',
+        entityId: target.id,
+        userId: adminUserId,
+        metadata: { email: target.email, resetByAdmin: true },
+      })
+
+      return { success: true }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Gagal mereset kata sandi'
       return { success: false, error: message }
     }
   },

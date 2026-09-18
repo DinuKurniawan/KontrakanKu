@@ -4,6 +4,7 @@ import { useState } from 'react'
 import TenantModal from './tenant-modal'
 import AssignTenantModal from './assign-tenant-modal'
 import EndRentalModal from './end-rental-modal'
+import ResetPasswordModal from './reset-password-modal'
 import { formatDateID } from '@/lib/utils'
 import {
   Users,
@@ -14,6 +15,7 @@ import {
   DoorOpen,
   LogOut,
   Calendar,
+  KeyRound,
 } from 'lucide-react'
 
 interface TenantManagementProps {
@@ -27,6 +29,7 @@ export default function TenantManagement({ initialTenants, availableUnits }: Ten
   const [isTenantModalOpen, setIsTenantModalOpen] = useState(false)
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false)
   const [isEndModalOpen, setIsEndModalOpen] = useState(false)
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedTenant, setSelectedTenant] = useState<any | null>(null)
@@ -50,6 +53,12 @@ export default function TenantManagement({ initialTenants, availableUnits }: Ten
   function openEndRental(rental: any, tenant: any) {
     setSelectedRental({ ...rental, user: tenant })
     setIsEndModalOpen(true)
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function openResetPassword(tenant: any) {
+    setSelectedTenant(tenant)
+    setIsResetModalOpen(true)
   }
 
   return (
@@ -194,23 +203,33 @@ export default function TenantManagement({ initialTenants, availableUnits }: Ten
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        {activeRental ? (
+                        <div className="flex items-center justify-end gap-2">
                           <button
-                            onClick={() => openEndRental(activeRental, tenant)}
-                            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-amber-200 bg-white px-3 py-1.5 text-xs font-semibold text-amber-700 shadow-sm transition hover:bg-amber-50 hover:text-amber-800 cursor-pointer"
+                            onClick={() => openResetPassword(tenant)}
+                            title={`Reset kata sandi ${tenant.name}`}
+                            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-xs font-semibold text-stone-600 shadow-sm transition hover:bg-stone-50 hover:text-stone-900 cursor-pointer"
                           >
-                            <LogOut className="h-3.5 w-3.5" />
-                            Selesaikan Sewa
+                            <KeyRound className="h-3.5 w-3.5" />
+                            Reset Sandi
                           </button>
-                        ) : (
-                          <button
-                            onClick={() => openAssign(tenant)}
-                            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-emerald-200 bg-white px-3 py-1.5 text-xs font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-50 hover:text-emerald-800 cursor-pointer"
-                          >
-                            <DoorOpen className="h-3.5 w-3.5" />
-                            Tugaskan Kamar
-                          </button>
-                        )}
+                          {activeRental ? (
+                            <button
+                              onClick={() => openEndRental(activeRental, tenant)}
+                              className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-amber-200 bg-white px-3 py-1.5 text-xs font-semibold text-amber-700 shadow-sm transition hover:bg-amber-50 hover:text-amber-800 cursor-pointer"
+                            >
+                              <LogOut className="h-3.5 w-3.5" />
+                              Selesaikan Sewa
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => openAssign(tenant)}
+                              className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-emerald-200 bg-white px-3 py-1.5 text-xs font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-50 hover:text-emerald-800 cursor-pointer"
+                            >
+                              <DoorOpen className="h-3.5 w-3.5" />
+                              Tugaskan Kamar
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   )
@@ -241,6 +260,12 @@ export default function TenantManagement({ initialTenants, availableUnits }: Ten
         isOpen={isEndModalOpen}
         onClose={() => setIsEndModalOpen(false)}
         rental={selectedRental}
+      />
+
+      <ResetPasswordModal
+        isOpen={isResetModalOpen}
+        onClose={() => setIsResetModalOpen(false)}
+        tenant={selectedTenant}
       />
     </div>
   )

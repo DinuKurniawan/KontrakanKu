@@ -29,55 +29,51 @@ export default async function AdminDashboardPage() {
   const today = new Date()
   const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
 
-  // Query statistik langsung dari database PostgreSQL
+  // Query statistik langsung dari database PostgreSQL.
+  // groupBy dipakai agar beberapa count yang hanya beda status
+  // digabung menjadi SATU query (bukan N query berulang).
   const [
     totalProperties,
-    totalUnits,
-    occupiedUnits,
-    availableUnits,
+    unitGroups,
     unpaidInvoices,
     pendingPayments,
-    currentMonthPaid,
-    currentMonthWaiting,
-    currentMonthUnpaid,
-    currentMonthOverdue,
+    monthGroups,
     recentPaymentsRaw,
     approvedPayments,
   ] = await Promise.all([
     prisma.property.count(),
-    prisma.unit.count(),
-    prisma.unit.count({ where: { status: UnitStatus.OCCUPIED } }),
-    prisma.unit.count({ where: { status: UnitStatus.AVAILABLE } }),
+    prisma.unit.groupBy({ by: ['status'], _count: { _all: true } }),
     prisma.invoice.count({
       where: {
         status: { in: [InvoiceStatus.UNPAID, InvoiceStatus.OVERDUE, InvoiceStatus.WAITING_PAYMENT] },
       },
     }),
     prisma.payment.count({ where: { status: PaymentStatus.PENDING } }),
-    // Overview Tagihan Bulan Ini (PRD Sec 9.2)
-    prisma.invoice.count({
-      where: { billingPeriod: currentMonth, status: InvoiceStatus.PAID },
-    }),
-    prisma.invoice.count({
-      where: { billingPeriod: currentMonth, status: InvoiceStatus.WAITING_PAYMENT },
-    }),
-    prisma.invoice.count({
-      where: { billingPeriod: currentMonth, status: InvoiceStatus.UNPAID },
-    }),
-    prisma.invoice.count({
-      where: { billingPeriod: currentMonth, status: InvoiceStatus.OVERDUE },
+    // Overview Tagihan Bulan Ini (PRD Sec 9.2): satu query untuk semua status
+    prisma.invoice.groupBy({
+      by: ['status'],
+      where: { billingPeriod: currentMonth },
+      _count: { _all: true },
     }),
     prisma.payment.findMany({
-      // Ambil lebih banyak agar setelah dedup per penyewa tetap terisi 5 baris
+      // Ambil lebih banyak agar setelah dedup per penyewa tetap terisi 5 baris.
+      // Hanya kolom yang dirender yang diambil (tanpa user:true / unit:true penuh).
       take: 20,
       orderBy: { createdAt: 'desc' },
-      include: {
+      select: {
+        id: true,
+        amount: true,
+        status: true,
+        senderBank: true,
+        senderName: true,
+        createdAt: true,
         invoice: {
-          include: {
+          select: {
+            billingPeriod: true,
             rental: {
-              include: {
-                user: true,
-                unit: true,
+              select: {
+                user: { select: { id: true, name: true } },
+                unit: { select: { name: true } },
               },
             },
           },
@@ -93,6 +89,17 @@ export default async function AdminDashboardPage() {
       select: { amount: true, verifiedAt: true },
     }),
   ])
+
+  const unitCountByStatus = new Map(unitGroups.map((g) => [g.status, g._count._all]))
+  const occupiedUnits = unitCountByStatus.get(UnitStatus.OCCUPIED) ?? 0
+  const availableUnits = unitCountByStatus.get(UnitStatus.AVAILABLE) ?? 0
+  const totalUnits = unitGroups.reduce((sum, g) => sum + g._count._all, 0)
+
+  const monthCountByStatus = new Map(monthGroups.map((g) => [g.status, g._count._all]))
+  const currentMonthPaid = monthCountByStatus.get(InvoiceStatus.PAID) ?? 0
+  const currentMonthWaiting = monthCountByStatus.get(InvoiceStatus.WAITING_PAYMENT) ?? 0
+  const currentMonthUnpaid = monthCountByStatus.get(InvoiceStatus.UNPAID) ?? 0
+  const currentMonthOverdue = monthCountByStatus.get(InvoiceStatus.OVERDUE) ?? 0
 
   // Agregasi pemasukan per bulan (3 tahun terakhir) & per tahun (5 tahun terakhir)
   const currentYear = today.getFullYear()

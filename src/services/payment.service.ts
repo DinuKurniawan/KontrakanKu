@@ -1,10 +1,9 @@
 import { paymentRepository } from '@/repositories/payment.repository'
 import { invoiceRepository } from '@/repositories/invoice.repository'
-import { assertCanAccessInvoice, assertCanAccessPayment } from '@/lib/authorization'
 import { submitPaymentSchema, verifyPaymentSchema, SubmitPaymentInput, VerifyPaymentInput } from '@/lib/validations/payment'
 import { checkRateLimit, RATE_LIMIT_RULES } from '@/lib/validations/rate-limiter'
 import { ActionResult, CurrentUser } from '@/types'
-import { InvoiceStatus } from '@prisma/client'
+import { InvoiceStatus, UserRole } from '@prisma/client'
 
 export const paymentService = {
   /**
@@ -33,20 +32,17 @@ export const paymentService = {
 
     const { invoiceId, paymentAccountId, amount, transferDate, senderBank, senderName, proofFileUrl, notes } = validated.data
 
-    // 3. Object-Level Authorization (PRD Sec 31): Pastikan tagihan ini milik user yang sedang login!
-    try {
-      await assertCanAccessInvoice(currentUser, invoiceId)
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Akses ditolak'
-      return { success: false, error: message }
-    }
-
-    // 4. Periksa status invoice
-    const invoice = await invoiceRepository.findById(invoiceId)
+    // 3. Object-Level Authorization (PRD Sec 31) + status invoice dalam
+    // SATU query ringan (bukan assert 1x + findById penuh 1x).
+    const invoice = await invoiceRepository.findStatusForSubmit(invoiceId)
     if (!invoice) {
       return { success: false, error: 'Tagihan tidak ditemukan.' }
     }
+    if (currentUser.role !== UserRole.ADMIN && invoice.rental.userId !== currentUser.id) {
+      return { success: false, error: 'Akses Ditolak: Anda tidak memiliki izin untuk melihat atau membayar tagihan ini.' }
+    }
 
+    // 4. Periksa status invoice
     if (invoice.status === InvoiceStatus.PAID) {
       return { success: false, error: 'Tagihan ini sudah lunas diverifikasi.' }
     }
@@ -120,10 +116,14 @@ export const paymentService = {
    */
   async getPaymentDetail(paymentId: string, currentUser: CurrentUser): Promise<ActionResult> {
     try {
-      await assertCanAccessPayment(currentUser, paymentId)
+      // SATU query: data penuh + cek kepemilikan dari hasil yang sama
+      // (bukan assert 1x + findById 1x).
       const payment = await paymentRepository.findById(paymentId)
       if (!payment) {
         return { success: false, error: 'Data pembayaran tidak ditemukan.' }
+      }
+      if (currentUser.role !== UserRole.ADMIN && payment.invoice.rental.user.id !== currentUser.id) {
+        return { success: false, error: 'Akses Ditolak: Anda tidak memiliki izin untuk melihat transaksi pembayaran ini.' }
       }
       return { success: true, data: payment }
     } catch (err: unknown) {

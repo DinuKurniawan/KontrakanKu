@@ -17,6 +17,17 @@ export const rentalRepository = {
     })
   },
 
+  /**
+   * Fetch ringan untuk pembuatan tagihan manual: cukup
+   * keberadaan + status (tanpa user/unit/invoices penuh).
+   */
+  async findStatusById(id: string) {
+    return prisma.rental.findUnique({
+      where: { id },
+      select: { id: true, status: true },
+    })
+  },
+
   async findActiveByUnitId(unitId: string) {
     return prisma.rental.findFirst({
       where: {

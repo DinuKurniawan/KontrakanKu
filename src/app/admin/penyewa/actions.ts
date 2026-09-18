@@ -40,6 +40,31 @@ export async function adminCreateTenantAction(
   return { success: true }
 }
 
+export async function adminResetPasswordAction(
+  prevState: TenantActionState | undefined,
+  formData: FormData
+): Promise<TenantActionState | undefined> {
+  const admin = await requireAdmin()
+
+  const raw = {
+    userId: formData.get('userId') as string,
+    newPassword: formData.get('newPassword') as string,
+    confirmPassword: formData.get('confirmPassword') as string,
+  }
+
+  const result = await userService.adminResetPassword(admin.id, raw as any)
+  if (!result.success) {
+    return {
+      error: result.error,
+      fieldErrors: result.fieldErrors,
+    }
+  }
+
+  revalidatePath('/admin/penyewa')
+  revalidatePath('/admin')
+  return { success: true }
+}
+
 export async function assignTenantAction(
   prevState: TenantActionState | undefined,
   formData: FormData

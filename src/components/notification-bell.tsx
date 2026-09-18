@@ -50,6 +50,7 @@ export default function NotificationBell({
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const inFlight = useRef(false)
   const router = useRouter()
 
   // Dropdown hanya menampilkan yang BELUM dibaca. Yang sudah dibaca
@@ -59,6 +60,11 @@ export default function NotificationBell({
   const unreadItems = notifications.filter((n) => !n.isRead)
 
   const fetchNotifications = useCallback(async () => {
+    // Hindari request bertumpuk & polling saat tab tidak terlihat —
+    // tiap poll = 3 query DB (list + count + session).
+    if (inFlight.current) return
+    if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return
+    inFlight.current = true
     try {
       const res = await fetch('/api/notifications', { cache: 'no-store' })
       if (!res.ok) return
@@ -67,17 +73,24 @@ export default function NotificationBell({
       setUnreadCount(data.unreadCount ?? 0)
     } catch {
       // Abaikan error jaringan agar tidak mengganggu dashboard
+    } finally {
+      inFlight.current = false
     }
   }, [])
 
   useEffect(() => {
     fetchNotifications()
-    const interval = setInterval(fetchNotifications, 30000)
+    const interval = setInterval(fetchNotifications, 60000)
     const onFocus = () => fetchNotifications()
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') fetchNotifications()
+    }
     window.addEventListener('focus', onFocus)
+    document.addEventListener('visibilitychange', onVisibility)
     return () => {
       clearInterval(interval)
       window.removeEventListener('focus', onFocus)
+      document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [fetchNotifications])
 

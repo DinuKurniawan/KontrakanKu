@@ -1,4 +1,5 @@
 import 'server-only'
+import { cache } from 'react'
 import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import { prisma } from './prisma'
@@ -89,6 +90,53 @@ export async function createSession(
 }
 
 /**
+ * Lookup sesi di database, di-cache per request.
+ * getSession() (dan requireAuth/requireAdmin) sering dipanggil berkali-kali
+ * dalam satu render — tanpa cache, setiap panggilan = 1 query berulang.
+ */
+const fetchSessionUser = cache(
+  async (sessionId: string): Promise<CurrentUser | null> => {
+    // Validasi sesi aktif di database PostgreSQL (PRD Sec 28)
+    const dbSession = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            phone: true,
+            avatarUrl: true,
+            createdAt: true,
+          },
+        },
+      },
+    })
+
+    if (!dbSession) {
+      // Sesi tidak ada di DB (mis. cookie basi / sudah logout di perangkat lain).
+      // Tidak perlu hapus apa-apa — cukup anggap tidak login.
+      // Cookie basi dibersihkan saat logoutAction (Server Action).
+      return null
+    }
+
+    if (dbSession.expiresAt < new Date()) {
+      // Sesi kadaluarsa: hapus baris DB saja.
+      // PENTING: Jangan panggil deleteSession() di sini karena getSession()
+      // dipanggil dari Server Component (cookies read-only).
+      // deleteMany tidak throw saat 0 baris (hindari error P2025 + log prisma:error).
+      await prisma.session
+        .deleteMany({ where: { id: sessionId } })
+        .catch(() => {})
+      return null
+    }
+
+    return dbSession.user
+  }
+)
+
+/**
  * Verifikasi sesi dari cookie dan database PostgreSQL (Secure Server Check)
  */
 export async function getSession(): Promise<{ payload: SessionPayload; user: CurrentUser } | null> {
@@ -102,46 +150,10 @@ export async function getSession(): Promise<{ payload: SessionPayload; user: Cur
     return null
   }
 
-  // Validasi sesi aktif di database PostgreSQL (PRD Sec 28)
-  const dbSession = await prisma.session.findUnique({
-    where: { id: payload.sessionId },
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          role: true,
-          phone: true,
-          avatarUrl: true,
-          createdAt: true,
-        },
-      },
-    },
-  })
+  const user = await fetchSessionUser(payload.sessionId)
+  if (!user) return null
 
-  if (!dbSession) {
-    // Sesi tidak ada di DB (mis. cookie basi / sudah logout di perangkat lain).
-    // Tidak perlu hapus apa-apa — cukup anggap tidak login.
-    // Cookie basi dibersihkan saat logoutAction (Server Action).
-    return null
-  }
-
-  if (dbSession.expiresAt < new Date()) {
-    // Sesi kadaluarsa: hapus baris DB saja.
-    // PENTING: Jangan panggil deleteSession() di sini karena getSession()
-    // dipanggil dari Server Component (cookies read-only).
-    // deleteMany tidak throw saat 0 baris (hindari error P2025 + log prisma:error).
-    await prisma.session
-      .deleteMany({ where: { id: payload.sessionId } })
-      .catch(() => {})
-    return null
-  }
-
-  return {
-    payload,
-    user: dbSession.user,
-  }
+  return { payload, user }
 }
 
 /**

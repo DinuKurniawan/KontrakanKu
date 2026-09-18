@@ -249,9 +249,9 @@ export default function HistoryView({ initialPayments }: HistoryViewProps) {
               onChange={(e) => setPeriodFilter(e.target.value)}
               className="px-3 py-1.5 rounded-xl border border-stone-300 text-xs font-medium text-stone-700 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600 cursor-pointer"
             >
-              <option value="ALL">Semua Periode</option>
+              <option value="ALL" className="text-stone-900 bg-white">Semua Periode</option>
               {periods.map((p) => (
-                <option key={p} value={p}>
+                <option key={p} value={p} className="text-stone-900 bg-white">
                   {formatBillingPeriod(p)}
                 </option>
               ))}

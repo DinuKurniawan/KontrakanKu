@@ -81,8 +81,8 @@ export default function TentangPage() {
                 { t: 'Kontrak bulanan fleksibel', d: 'Perpanjang dari HP tanpa ribet.' },
                 { t: 'Lingkungan tertata', d: 'Akses jalan lebar, bebas banjir.' },
               ].map((x, i) => (
-                <li key={x.t} className="flex items-start gap-4 rounded-2xl border hairline bg-white p-4">
-                  <span className="tick flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-pine font-mono text-xs font-bold text-paper">
+                <li key={x.t} className="flex items-start gap-4 rounded-2xl border hairline bg-cream p-4">
+                  <span className="tick flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold font-mono text-xs font-bold text-[#121212]">
                     0{i + 1}
                   </span>
                   <div>
@@ -103,9 +103,9 @@ export default function TentangPage() {
           <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-4">
             {METRICS.map((m) => (
               <div key={m.l} className="border-l border-paper/15 pl-5">
-                <p className="font-display text-4xl font-medium tracking-tight text-paper sm:text-5xl">{m.v}</p>
+                <p className="font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">{m.v}</p>
                 <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-gold">{m.l}</p>
-                <p className="mt-1 text-[13px] text-paper/60">{m.s}</p>
+                <p className="mt-1 text-[13px] text-ink/60">{m.s}</p>
               </div>
             ))}
           </div>
@@ -120,7 +120,7 @@ export default function TentangPage() {
             <h2 className="max-w-xl font-display text-3xl font-medium tracking-tight sm:text-[2.75rem] sm:leading-[1.05]">
               Tiga hal yang selalu kami jaga.
             </h2>
-            <Link href="/faq" className="btn-elegant-ghost !px-2 font-bold text-pine">
+            <Link href="/faq" className="btn-elegant-ghost !px-2 font-bold text-gold">
               Baca FAQ <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -173,7 +173,7 @@ export default function TentangPage() {
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cream">
                   <Phone className="h-4 w-4 text-moss" />
                 </span>
-                <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="pt-1.5 font-bold text-pine underline underline-offset-4">
+                <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="pt-1.5 font-bold text-gold underline underline-offset-4">
                   0813-8463-4526
                 </a>
               </div>
@@ -211,7 +211,7 @@ export default function TentangPage() {
       {/* Quote */}
       <section className="w-full bg-paper">
         <div className="mx-auto w-full max-w-3xl px-5 py-14 text-center sm:px-6 sm:py-20">
-          <Quote className="mx-auto h-8 w-8 fill-goldsoft text-gold" aria-hidden />
+          <Quote className="mx-auto h-8 w-8 fill-gold text-gold" aria-hidden />
           <blockquote>
             <p className="mt-5 font-display text-2xl font-medium leading-snug tracking-tight text-ink sm:text-[2rem] sm:leading-[1.3]">
               “Kami sengaja jaga tetap kecil — supaya tiap kamar tetap terawat,

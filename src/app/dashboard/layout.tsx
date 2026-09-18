@@ -14,7 +14,7 @@ export default async function TenantDashboardLayout({
   const user = await requireAuth()
 
   return (
-    <div className="min-h-screen bg-stone-50 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-stone-50 flex flex-col md:flex-row [color-scheme:light]">
       {/* Mobile / Desktop Sidebar */}
       <aside className="w-full md:w-64 bg-stone-900 text-stone-200 border-b md:border-b-0 md:border-r border-stone-800 flex flex-col shrink-0 md:sticky md:top-0 md:h-screen">
         <div className="p-5 flex items-center justify-between border-b border-stone-800">

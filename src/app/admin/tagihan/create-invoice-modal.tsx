@@ -120,10 +120,10 @@ export default function CreateInvoiceModal({
                   required
                   value={rentalId}
                   onChange={e => handleRentalChange(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent bg-white transition"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent bg-white transition"
                 >
                   {activeRentals.map(r => (
-                    <option key={r.id} value={r.id}>
+                    <option key={r.id} value={r.id} className="text-stone-900 bg-white">
                       {r.user.name} — {r.unit.name} ({formatRupiah(Number(r.monthlyRent))})
                     </option>
                   ))}
@@ -141,7 +141,7 @@ export default function CreateInvoiceModal({
                     required
                     value={billingPeriod}
                     onChange={e => setBillingPeriod(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
                   />
                   {state?.fieldErrors?.billingPeriod && (
                     <p className="text-[11px] text-rose-600 mt-1">{state.fieldErrors.billingPeriod[0]}</p>
@@ -159,7 +159,7 @@ export default function CreateInvoiceModal({
                     required
                     value={dueDate}
                     onChange={e => setDueDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
+                    className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
                   />
                 </div>
               </div>
@@ -176,7 +176,7 @@ export default function CreateInvoiceModal({
                   value={amount}
                   onChange={e => setAmount(e.target.value)}
                   placeholder="1300000"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-white text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
                 />
                 {state?.fieldErrors?.amount && (
                   <p className="text-[11px] text-rose-600 mt-1">{state.fieldErrors.amount[0]}</p>
@@ -193,7 +193,7 @@ export default function CreateInvoiceModal({
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
                   placeholder="Contoh: Termasuk biaya iuran sampah bulan ini"
-                  className="w-full px-3.5 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
+                  className="w-full px-3.5 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
                 />
               </div>
             </>

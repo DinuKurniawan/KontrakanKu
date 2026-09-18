@@ -30,7 +30,7 @@ export function HeaderActions({ title, url }: { title: string; url: string }) {
       <button
         type="button"
         onClick={handleShare}
-        className="chip !border-line !bg-white font-semibold hover:!border-moss"
+        className="chip !border-line !bg-cream font-semibold hover:!border-gold"
       >
         {copied ? <Check className="h-4 w-4 text-fern" /> : <Share2 className="h-4 w-4" />}
         {copied ? 'Tersalin' : 'Bagikan'}
@@ -39,7 +39,7 @@ export function HeaderActions({ title, url }: { title: string; url: string }) {
         type="button"
         onClick={() => setSaved((v) => !v)}
         aria-pressed={saved}
-        className={`chip font-semibold ${saved ? 'chip-on' : '!border-line !bg-white hover:!border-moss'}`}
+        className={`chip font-semibold ${saved ? 'chip-on' : '!border-line !bg-cream hover:!border-gold'}`}
       >
         <Heart className={`h-4 w-4 ${saved ? 'fill-current' : ''}`} />
         Simpan

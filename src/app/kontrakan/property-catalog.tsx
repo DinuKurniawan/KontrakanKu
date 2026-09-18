@@ -97,12 +97,12 @@ export default function PropertyCatalog({ properties }: PropertyCatalogProps) {
             />
           </div>
           <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center xl:w-auto">
-            <label className="inline-flex cursor-pointer items-center gap-2.5 rounded-full border hairline bg-white px-4 py-2.5 text-sm font-semibold text-bark transition hover:border-moss hover:text-pine">
+            <label className="inline-flex cursor-pointer items-center gap-2.5 rounded-full border hairline bg-cream px-4 py-2.5 text-sm font-semibold text-bark transition hover:border-gold hover:text-gold">
               <input
                 type="checkbox"
                 checked={onlyAvailable}
                 onChange={(e) => setOnlyAvailable(e.target.checked)}
-                className="h-4 w-4 accent-[#0e5f43]"
+                className="h-4 w-4 accent-[#d4af37]"
               />
               Tersedia saja
             </label>
@@ -112,9 +112,9 @@ export default function PropertyCatalog({ properties }: PropertyCatalogProps) {
               className="field !w-full !rounded-full !py-2.5 font-semibold sm:!w-auto"
               aria-label="Urutkan"
             >
-              <option value="NEWEST">Terbaru</option>
-              <option value="PRICE_ASC">Termurah</option>
-              <option value="PRICE_DESC">Termahal</option>
+              <option value="NEWEST" className="bg-[#1a1a1a] text-[#f5f5f7]">Terbaru</option>
+              <option value="PRICE_ASC" className="bg-[#1a1a1a] text-[#f5f5f7]">Termurah</option>
+              <option value="PRICE_DESC" className="bg-[#1a1a1a] text-[#f5f5f7]">Termahal</option>
             </select>
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function PropertyCatalog({ properties }: PropertyCatalogProps) {
             <button
               type="button"
               onClick={clearAll}
-              className="btn-elegant-ghost !p-1 text-[13px] font-bold text-pine"
+              className="btn-elegant-ghost !p-1 text-[13px] font-bold text-gold"
             >
               <X className="h-3.5 w-3.5" /> Reset
             </button>
@@ -226,7 +226,7 @@ export default function PropertyCatalog({ properties }: PropertyCatalogProps) {
                 </figure>
 
                 <div className="p-6">
-                  <p className="font-display text-[1.35rem] font-semibold tracking-tight text-pine">
+                  <p className="font-display text-[1.35rem] font-semibold tracking-tight text-gold">
                     {priceLabel}
                     <span className="font-sans text-sm font-normal text-fog"> /bulan</span>
                   </p>
@@ -259,7 +259,7 @@ export default function PropertyCatalog({ properties }: PropertyCatalogProps) {
                     </span>
                     <Link
                       href={`/kontrakan/${property.slug}`}
-                      className="btn-elegant-ghost !p-0 font-bold text-pine"
+                      className="btn-elegant-ghost !p-0 font-bold text-gold"
                     >
                       Detail <ArrowUpRight className="h-4 w-4" />
                     </Link>

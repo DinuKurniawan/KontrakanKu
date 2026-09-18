@@ -74,7 +74,7 @@ export default function HeroCarousel() {
 
         <div className="absolute inset-x-0 bottom-0 z-20 flex items-end justify-between gap-3 p-5 sm:p-6">
           <div className="rounded-full bg-pinedeep/45 px-4 py-2.5 backdrop-blur-md">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper/85">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink/85">
               {String(index + 1).padStart(2, "0")} / {String(count).padStart(2, "0")} · Foto asli unit
             </p>
           </div>
@@ -87,7 +87,7 @@ export default function HeroCarousel() {
                   onClick={() => goTo(i)}
                   aria-label={`Ke foto ${i + 1}`}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === index ? "w-8 bg-paper" : "w-1.5 bg-paper/50 hover:bg-paper/80"
+                    i === index ? "w-8 bg-ink" : "w-1.5 bg-ink/50 hover:bg-ink/80"
                   }`}
                 />
               ))}
@@ -96,7 +96,7 @@ export default function HeroCarousel() {
               type="button"
               onClick={prev}
               aria-label="Foto sebelumnya"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-paper/90 text-pine backdrop-blur transition-all duration-200 hover:bg-paper"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-ink/90 text-[#121212] backdrop-blur transition-all duration-200 hover:bg-gold"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -104,7 +104,7 @@ export default function HeroCarousel() {
               type="button"
               onClick={next}
               aria-label="Foto berikutnya"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-pine text-paper transition-all duration-200 hover:bg-pinedeep"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-gold text-[#121212] transition-all duration-200 hover:bg-[#e6c75a]"
             >
               <ChevronRight className="h-5 w-5" />
             </button>

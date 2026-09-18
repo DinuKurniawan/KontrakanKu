@@ -39,7 +39,7 @@ export default async function PropertyListingPage() {
           <nav className="breadcrumbs p-0 text-sm" aria-label="Breadcrumb">
             <ul>
               <li>
-                <Link href="/" className="inline-flex items-center gap-1.5 text-bark hover:text-pine">
+                <Link href="/" className="inline-flex items-center gap-1.5 text-bark hover:text-gold">
                   <ChevronLeft className="h-4 w-4" /> Beranda
                 </Link>
               </li>
@@ -71,8 +71,8 @@ export default async function PropertyListingPage() {
       <section className="w-full bg-cream/40">
         <div className="shell w-full py-8 lg:py-12">
           <PropertyCatalog properties={properties} />
-          <div className="mx-auto mt-10 flex max-w-xl flex-col items-center gap-3 rounded-[1.75rem] border hairline bg-white px-6 py-7 text-center shadow-warm sm:flex-row sm:text-left">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-pine text-paper">
+          <div className="mx-auto mt-10 flex max-w-xl flex-col items-center gap-3 rounded-[1.75rem] border hairline bg-cream px-6 py-7 text-center shadow-warm sm:flex-row sm:text-left">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gold text-[#121212]">
               <MessageCircle className="h-5 w-5" />
             </span>
             <p className="flex-1 text-sm leading-6 text-bark">
@@ -81,7 +81,7 @@ export default async function PropertyListingPage() {
                 href="https://wa.me/6281384634526"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-bold text-pine underline underline-offset-4"
+                className="font-bold text-gold underline underline-offset-4"
               >
                 0813-8463-4526
               </a>{' '}

@@ -157,7 +157,7 @@ export default function PaymentAccountModal({
                 value={bankName}
                 onChange={e => setBankName(e.target.value)}
                 placeholder="Pilih atau ketik nama bank..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
               />
               <datalist id="bank-suggestions">
                 {COMMON_BANKS.map(b => (
@@ -180,7 +180,7 @@ export default function PaymentAccountModal({
                 value={accountNumber}
                 onChange={e => setAccountNumber(e.target.value)}
                 placeholder="Contoh: 1234-5678-90"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm font-mono text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
               />
               {state?.fieldErrors?.accountNumber && (
                 <p className="text-[11px] text-rose-600 mt-1">{state.fieldErrors.accountNumber[0]}</p>
@@ -198,7 +198,7 @@ export default function PaymentAccountModal({
                 value={accountName}
                 onChange={e => setAccountName(e.target.value)}
                 placeholder="Contoh: Ibu Hj. Aminah"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
               />
               {state?.fieldErrors?.accountName && (
                 <p className="text-[11px] text-rose-600 mt-1">{state.fieldErrors.accountName[0]}</p>
@@ -216,7 +216,7 @@ export default function PaymentAccountModal({
                 value={qrCodeUrl}
                 onChange={e => setQrCodeUrl(e.target.value)}
                 placeholder="https://... atau /uploads/qris.jpg"
-                className="w-full px-3.5 py-2 rounded-xl border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
+                className="w-full px-3.5 py-2 rounded-xl border border-stone-300 bg-white text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
               />
             </div>
           </div>

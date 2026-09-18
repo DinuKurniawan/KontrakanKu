@@ -107,7 +107,7 @@ export default function AssignTenantModal({
                   className="w-full rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-sm font-medium text-stone-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 transition"
                 >
                   {availableUnits.map(u => (
-                    <option key={u.id} value={u.id}>
+                    <option key={u.id} value={u.id} className="text-stone-900 bg-white">
                       {u.property.name} — {u.name} ({formatRupiah(Number(u.monthlyRent))}/bln)
                     </option>
                   ))}

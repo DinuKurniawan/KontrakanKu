@@ -11,21 +11,21 @@ export interface TestimonialItem {
 
 function TestimonialCard({ item }: { item: TestimonialItem }) {
   return (
-    <figure className="flex h-full w-[85vw] max-w-md shrink-0 flex-col rounded-[1.75rem] bg-paper/[0.06] p-7 ring-1 ring-paper/12 backdrop-blur sm:w-[26rem]">
+    <figure className="flex h-full w-[85vw] max-w-md shrink-0 flex-col rounded-[1.75rem] bg-ink/[0.06] p-7 ring-1 ring-ink/12 backdrop-blur sm:w-[26rem]">
       <Quote className="h-6 w-6 fill-gold text-gold" aria-hidden />
-      <blockquote className="mt-4 flex-1 font-display text-[1.05rem] leading-7 text-paper/90">
+      <blockquote className="mt-4 flex-1 font-display text-[1.05rem] leading-7 text-ink/90">
         “{item.text}”
       </blockquote>
-      <figcaption className="mt-6 flex items-center gap-3 border-t border-paper/12 pt-5">
+      <figcaption className="mt-6 flex items-center gap-3 border-t border-ink/12 pt-5">
         <span
           aria-hidden
-          className="tick rounded-lg bg-paper/10 px-2.5 py-1.5 font-mono text-xs font-bold text-goldsoft"
+          className="tick rounded-lg bg-gold/15 px-2.5 py-1.5 font-mono text-xs font-bold text-gold"
         >
           {item.code}
         </span>
         <span className="min-w-0">
-          <span className="block truncate text-sm font-bold text-paper">{item.name}</span>
-          <span className="block truncate font-mono text-[11px] uppercase tracking-[0.12em] text-paper/55">
+          <span className="block truncate text-sm font-bold text-ink">{item.name}</span>
+          <span className="block truncate font-mono text-[11px] uppercase tracking-[0.12em] text-ink/55">
             {item.unit}
           </span>
         </span>
@@ -55,7 +55,7 @@ export default function TestimonialCarousel({ items }: { items: TestimonialItem[
           ))}
         </div>
       </div>
-      <p className="mt-5 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-paper/40">
+      <p className="mt-5 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-ink/40">
         Geser kursor untuk menjeda
       </p>
     </div>

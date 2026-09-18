@@ -48,34 +48,34 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen w-full max-w-full flex-col overflow-x-clip bg-paper lg:flex-row">
       {/* Left — brand panel */}
-      <div className="relative hidden w-full min-w-0 flex-col justify-between overflow-hidden border-r hairline bg-pine p-10 text-paper lg:flex lg:w-[46%] xl:w-[44%] xl:p-14">
+      <div className="relative hidden w-full min-w-0 flex-col justify-between overflow-hidden border-r hairline bg-pine p-10 text-ink lg:flex lg:w-[46%] xl:w-[44%] xl:p-14">
         <Link href="/" className="relative z-[2] flex items-center gap-2.5">
-          <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-paper text-pine">
+          <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-gold text-[#121212]">
             <KeyRound className="h-[18px] w-[18px] -rotate-45" strokeWidth={2.2} />
-            <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-gold ring-2 ring-pine" aria-hidden />
+            <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-[#121212] ring-2 ring-gold" aria-hidden />
           </span>
           <span className="leading-none">
             <span className="block font-display text-[17px] font-semibold tracking-tight">Kelola Kontrakan</span>
-            <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.18em] text-paper/55">
+            <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.18em] text-ink/55">
               Cilandak · Est. 2018
             </span>
           </span>
         </Link>
 
         <div className="relative z-[2]">
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper/55">Masuk</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink/55">Masuk</p>
           <h1 className="mt-4 max-w-md font-display text-4xl font-medium leading-[1.06] tracking-tight xl:text-5xl">
-            Tagihan kontrakan, <em className="font-light italic text-goldsoft">tanpa ribet.</em>
+            Tagihan kontrakan, <em className="font-light italic text-gold">tanpa ribet.</em>
           </h1>
-          <p className="mt-4 max-w-sm text-[15px] leading-7 text-paper/70">
+          <p className="mt-4 max-w-sm text-[15px] leading-7 text-ink/70">
             Cek tagihan bulanan, upload bukti transfer dari HP, dan pantau
             status verifikasi — semua tercatat rapi.
           </p>
           <ul className="mt-8 space-y-3.5">
             {['Tagihan tercatat & real-time', 'Bukti terarsip permanen', 'Verifikasi manual <24 jam'].map((t) => (
-              <li key={t} className="flex items-center gap-3 text-sm text-paper/85">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-paper/10 ring-1 ring-paper/20">
-                  <Check className="h-3.5 w-3.5 text-goldsoft" />
+              <li key={t} className="flex items-center gap-3 text-sm text-ink/85">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink/10 ring-1 ring-ink/20">
+                  <Check className="h-3.5 w-3.5 text-gold" />
                 </span>
                 {t}
               </li>
@@ -83,7 +83,7 @@ export default function LoginPage() {
           </ul>
         </div>
 
-        <p className="relative z-[2] font-mono text-[11px] uppercase tracking-[0.16em] text-paper/45">
+        <p className="relative z-[2] font-mono text-[11px] uppercase tracking-[0.16em] text-ink/45">
           Dikelola keluarga · Sejak 2018
         </p>
       </div>
@@ -105,7 +105,7 @@ export default function LoginPage() {
         <div className="flex w-full flex-1 items-center justify-center px-4 py-8 sm:px-8 sm:py-10 lg:px-12">
           <div className="w-full min-w-0 max-w-md lg:max-w-lg">
             <Link href="/" className="flex items-center gap-2.5 lg:hidden">
-              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-pine text-paper">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gold text-[#121212]">
                 <KeyRound className="h-[18px] w-[18px] -rotate-45" />
               </span>
               <span className="font-display text-[17px] font-semibold tracking-tight">Kelola Kontrakan</span>
@@ -122,7 +122,7 @@ export default function LoginPage() {
             {state?.error && (
               <div role="alert" className="mt-6 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5">
                 <CircleAlert className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
-                <div className="text-sm leading-6 text-ink">
+                <div className="text-sm leading-6 text-red-950">
                   <span className="font-bold">Gagal masuk — </span>
                   {state.error}
                 </div>
@@ -205,7 +205,7 @@ export default function LoginPage() {
                     href="https://wa.me/6281384634526?text=Halo%20Pengelola%2C%20saya%20lupa%20email%20atau%20kata%20sandi%20akun%20saya"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-bold text-pine underline underline-offset-4"
+                    className="font-bold text-gold underline underline-offset-4"
                   >
                     Hubungi pengelola
                   </a>

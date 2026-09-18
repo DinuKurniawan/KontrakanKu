@@ -167,13 +167,13 @@ export default async function HomePage() {
             <div className="absolute -inset-3 rounded-[2.5rem] border hairline" aria-hidden />
             <HeroCarousel />
             <div className="absolute -left-3 top-8 z-20 sm:-left-6">
-              <div className="stamp stamp-live -rotate-2 shadow-lift !px-4 !py-2.5 ring-1 ring-paper/30">
-                <span className="inline-block h-2 w-2 rounded-full bg-emerald-300" aria-hidden />
+              <div className="stamp stamp-live -rotate-2 shadow-lift !px-4 !py-2.5 ring-1 ring-[#121212]/30">
+                <span className="inline-block h-2 w-2 rounded-full bg-[#121212]" aria-hidden />
                 Siap survei minggu ini
               </div>
             </div>
             <div className="absolute -bottom-5 left-5 right-5 z-20 sm:left-8 sm:right-auto">
-              <div className="flex items-center gap-3 rounded-2xl border hairline bg-paper/95 px-4 py-3 shadow-lift backdrop-blur">
+              <div className="flex items-center gap-3 rounded-2xl border hairline bg-cream/95 px-4 py-3 shadow-lift backdrop-blur">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-mist">
                   <BadgeCheck className="h-5 w-5 text-moss" />
                 </span>
@@ -209,9 +209,9 @@ export default async function HomePage() {
               { v: "<1 jam", l: "Rata-rata balasan", s: "Chat langsung direspons" },
               { v: "4.9/5", l: "Skor kepuasan", s: "Dari ulasan terverifikasi" },
             ].map((s) => (
-              <div key={s.l} className="bg-white px-6 py-7 sm:px-8">
+              <div key={s.l} className="bg-cream px-6 py-7 sm:px-8">
                 <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-fog">{s.l}</p>
-                <p className="mt-2 font-display text-4xl font-medium tracking-tight text-pine sm:text-[2.75rem]">
+                <p className="mt-2 font-display text-4xl font-medium tracking-tight text-gold sm:text-[2.75rem]">
                   {s.v}
                 </p>
                 <p className="mt-1 text-[13px] text-fog">{s.s}</p>
@@ -231,7 +231,7 @@ export default async function HomePage() {
                 Semua yang Anda butuhkan, sudah tersedia.
               </h2>
             </div>
-            <Link href="/kontrakan" className="btn-elegant-ghost !px-2 text-pine">
+            <Link href="/kontrakan" className="btn-elegant-ghost !px-2 text-gold">
               Jelajahi unit <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -246,7 +246,7 @@ export default async function HomePage() {
                   style={{ animationDelay: `${idx * 90}ms` }}
                 >
                   <div className="flex items-start justify-between">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cream transition-colors duration-300 group-hover:bg-pine group-hover:text-paper">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cream transition-colors duration-300 group-hover:bg-gold group-hover:text-[#121212]">
                       <Icon className="h-[22px] w-[22px]" />
                     </span>
                     <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-fog">
@@ -277,7 +277,7 @@ export default async function HomePage() {
                 Foto asli, siap survei kapan saja.
               </p>
             </div>
-            <Link href="/kontrakan" className="btn-elegant-outline hidden !bg-white sm:inline-flex">
+            <Link href="/kontrakan" className="btn-elegant-outline hidden sm:inline-flex">
               Lihat semua <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -323,7 +323,7 @@ export default async function HomePage() {
                       </span>
                     </figure>
                     <div className="p-6">
-                      <p className="font-display text-[1.4rem] font-semibold tracking-tight text-pine">
+                      <p className="font-display text-[1.4rem] font-semibold tracking-tight text-gold">
                         {formatRupiah(p.monthlyPriceFrom.toNumber())}
                         <span className="font-sans text-sm font-normal text-fog"> /bulan</span>
                       </p>
@@ -345,7 +345,7 @@ export default async function HomePage() {
                         </span>
                         <Link
                           href={`/kontrakan/${p.slug}`}
-                          className="btn-elegant-ghost !p-0 font-bold text-pine"
+                          className="btn-elegant-ghost !p-0 font-bold text-gold"
                         >
                           Detail <ArrowUpRight className="h-4 w-4" />
                         </Link>
@@ -356,7 +356,7 @@ export default async function HomePage() {
               })}
             </div>
           )}
-          <Link href="/kontrakan" className="btn-elegant-outline mt-6 w-full !bg-white sm:hidden">
+          <Link href="/kontrakan" className="btn-elegant-outline mt-6 w-full sm:hidden">
             Lihat semua unit
           </Link>
         </div>
@@ -391,11 +391,11 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="eyebrow">Cerita penyewa</p>
-              <h2 className="mt-4 font-display text-3xl font-medium tracking-tight text-paper sm:text-[2.75rem] sm:leading-[1.05]">
+              <h2 className="mt-4 font-display text-3xl font-medium tracking-tight text-ink sm:text-[2.75rem] sm:leading-[1.05]">
                 Dipercaya sejak 2018.
               </h2>
             </div>
-            <p className="tick text-sm text-paper/60">18 ulasan · rata-rata 4.9</p>
+            <p className="tick text-sm text-ink/60">18 ulasan · rata-rata 4.9</p>
           </div>
 
           <div className="mt-10" aria-label="Testimoni penyewa">
@@ -423,14 +423,14 @@ export default async function HomePage() {
             {FAQ_ITEMS.map((f, i) => (
               <details
                 key={f.q}
-                className="group rounded-[1.25rem] border hairline bg-white transition-shadow duration-300 open:shadow-warm"
+                className="group rounded-[1.25rem] border hairline bg-cream transition-shadow duration-300 open:shadow-warm"
               >
                 <summary className="flex cursor-pointer list-none items-center gap-4 p-5 pr-6 text-left font-semibold text-[15px] text-ink [&::-webkit-details-marker]:hidden">
                   <span className="tick shrink-0 rounded-full bg-cream px-2.5 py-1 text-[11px] text-bark">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="flex-1">{f.q}</span>
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border hairline text-xl font-light leading-none transition-transform duration-300 group-open:rotate-45 group-open:bg-pine group-open:text-paper" aria-hidden>
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border hairline text-xl font-light leading-none transition-transform duration-300 group-open:rotate-45 group-open:bg-gold group-open:text-[#121212]" aria-hidden>
                     +
                   </span>
                 </summary>
@@ -448,26 +448,26 @@ export default async function HomePage() {
         <div className="shell w-full pb-16 sm:pb-24">
           <div className="relative overflow-hidden rounded-[2rem] border border-pine bg-pine px-6 py-12 text-center sm:px-12 sm:py-16">
             <div className="relative">
-              <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-paper/60">
+              <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink/60">
                 Jl. Cilandak Barat No. 28
               </p>
-              <h2 className="mx-auto mt-4 max-w-2xl font-display text-3xl font-medium tracking-tight text-paper sm:text-5xl sm:leading-[1.05]">
+              <h2 className="mx-auto mt-4 max-w-2xl font-display text-3xl font-medium tracking-tight text-ink sm:text-5xl sm:leading-[1.05]">
                 Lihat unitnya langsung <em className="font-light italic">minggu ini.</em>
               </h2>
-              <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-paper/70">
+              <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-bark">
                 Survei pukul 08.00–18.00, setiap hari. Janjian via WhatsApp,
                 putuskan dengan tenang setelah lihat sendiri.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/kontrakan"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-paper px-7 py-3.5 text-[15px] font-bold text-pine transition hover:bg-goldsoft sm:w-auto"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-3.5 text-[15px] font-bold text-[#121212] transition hover:bg-[#e6c75a] sm:w-auto"
                 >
                   Lihat kontrakan <ArrowUpRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-bold text-paper ring-1 ring-paper/40 transition hover:bg-paper/10 sm:w-auto"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-bold text-ink ring-1 ring-ink/40 transition hover:bg-ink/10 sm:w-auto"
                 >
                   Masuk
                 </Link>

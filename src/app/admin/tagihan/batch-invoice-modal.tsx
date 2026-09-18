@@ -144,7 +144,7 @@ export default function BatchInvoiceModal({
                   required
                   value={billingPeriod}
                   onChange={e => setBillingPeriod(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
                 />
               </div>
 
@@ -162,7 +162,7 @@ export default function BatchInvoiceModal({
                   value={dueDay}
                   onChange={e => setDueDay(Number(e.target.value))}
                   placeholder="10"
-                  className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition"
                 />
                 <span className="text-[10px] text-stone-400 mt-1 block">Tgl 1 - 28 setiap bulan</span>
               </div>

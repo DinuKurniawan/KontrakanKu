@@ -201,12 +201,12 @@ export default function InvoiceManagement({
             onChange={e => handleStatusChange(e.target.value)}
             className="rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-xs font-medium text-stone-700 shadow-sm focus:border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 transition"
           >
-            <option value="ALL">Semua Status</option>
-            <option value="UNPAID">Belum Dibayar (UNPAID)</option>
-            <option value="WAITING_PAYMENT">Menunggu Verifikasi (WAITING_PAYMENT)</option>
-            <option value="PAID">Lunas (PAID)</option>
-            <option value="OVERDUE">Terlambat (OVERDUE)</option>
-            <option value="CANCELLED">Dibatalkan (CANCELLED)</option>
+            <option value="ALL" className="text-stone-900 bg-white">Semua Status</option>
+            <option value="UNPAID" className="text-stone-900 bg-white">Belum Dibayar (UNPAID)</option>
+            <option value="WAITING_PAYMENT" className="text-stone-900 bg-white">Menunggu Verifikasi (WAITING_PAYMENT)</option>
+            <option value="PAID" className="text-stone-900 bg-white">Lunas (PAID)</option>
+            <option value="OVERDUE" className="text-stone-900 bg-white">Terlambat (OVERDUE)</option>
+            <option value="CANCELLED" className="text-stone-900 bg-white">Dibatalkan (CANCELLED)</option>
           </select>
         </div>
 
@@ -219,9 +219,9 @@ export default function InvoiceManagement({
             className="max-w-48 rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-xs font-medium text-stone-700 shadow-sm focus:border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 transition"
             title="Filter berdasarkan nama penyewa"
           >
-            <option value="ALL">Semua Penyewa</option>
+            <option value="ALL" className="text-stone-900 bg-white">Semua Penyewa</option>
             {tenantNames.map((name) => (
-              <option key={name} value={name}>
+              <option key={name} value={name} className="text-stone-900 bg-white">
                 {name}
               </option>
             ))}

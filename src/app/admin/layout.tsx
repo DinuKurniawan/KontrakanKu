@@ -13,7 +13,7 @@ export default async function AdminLayout({
   const admin = await requireAdmin()
 
   return (
-    <div className="min-h-screen bg-stone-100 flex">
+    <div className="min-h-screen bg-stone-100 flex [color-scheme:light]">
       {/* Sidebar Desktop */}
       <aside className="w-64 bg-stone-900 text-stone-200 flex flex-col shrink-0 border-r border-stone-800">
         <div className="p-5 flex items-center gap-3 border-b border-stone-800">

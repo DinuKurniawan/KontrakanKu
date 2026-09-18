@@ -140,7 +140,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           <nav className="breadcrumbs p-0 text-sm" aria-label="Breadcrumb">
             <ul>
               <li>
-                <Link href="/kontrakan" className="inline-flex items-center gap-1 text-bark hover:text-pine">
+                <Link href="/kontrakan" className="inline-flex items-center gap-1 text-bark hover:text-gold">
                   <ChevronLeft className="h-4 w-4" /> Semua unit
                 </Link>
               </li>
@@ -193,7 +193,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             <section className="card-dossier !transform-none p-5 sm:p-6" aria-label="Pengelola">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex min-w-0 items-center gap-3.5">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-pine font-display text-sm font-bold text-paper" aria-hidden>
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gold font-display text-sm font-bold text-[#121212]" aria-hidden>
                     {(admin?.name || property.name).slice(0, 2).toUpperCase()}
                   </span>
                   <div className="min-w-0">
@@ -213,7 +213,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                 const Icon = h.icon
                 return (
                   <div key={h.title} className="rounded-[1.5rem] border hairline bg-cream/60 p-5">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-pine text-paper">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold text-[#121212]">
                       <Icon className="h-5 w-5" />
                     </span>
                     <p className="mt-3 text-sm font-bold text-ink">{h.title}</p>
@@ -295,7 +295,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                     <div
                       key={unit.id}
                       className={`rounded-[1.5rem] border p-5 transition ${
-                        isAvailable ? 'hairline bg-white shadow-warm' : 'border-line/60 bg-cream/40 opacity-70'
+                        isAvailable ? 'hairline bg-cream shadow-warm' : 'border-line/60 bg-cream/40 opacity-70'
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -304,7 +304,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                           {isAvailable ? 'Tersedia' : 'Terisi'}
                         </span>
                       </div>
-                      <p className="tick mt-2 font-display text-xl font-semibold tracking-tight text-pine">
+                      <p className="tick mt-2 font-display text-xl font-semibold tracking-tight text-gold">
                         {formatRupiah(unit.monthlyRent.toNumber())}
                         <span className="font-sans text-sm font-normal text-fog">/bln</span>
                       </p>
@@ -375,7 +375,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                     </a>
                   </div>
                 </div>
-                <div className="flex flex-col gap-3 bg-white px-4 py-4 sm:px-5 md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-col gap-3 bg-cream px-4 py-4 sm:px-5 md:flex-row md:items-center md:justify-between">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-bold text-ink">{property.name}</p>
                     <p className="mt-0.5 truncate text-[13px] text-fog">{property.address}</p>
@@ -408,7 +408,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             <div className="space-y-4 lg:sticky lg:top-24">
               <div className="card-dossier !transform-none overflow-hidden p-6 sm:p-7">
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-fog">Mulai dari</p>
-                <p className="mt-1.5 font-display text-[2rem] font-semibold tracking-tight text-pine">
+                <p className="mt-1.5 font-display text-[2rem] font-semibold tracking-tight text-gold">
                   {formatRupiah(property.monthlyPriceFrom.toNumber())}
                   <span className="font-sans text-base font-normal text-fog">/bulan</span>
                 </p>
@@ -470,23 +470,23 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 
                 <Link
                   href="/login"
-                  className="mt-5 block text-center text-[13px] font-bold text-pine underline underline-offset-4 hover:text-moss"
+                  className="mt-5 block text-center text-[13px] font-bold text-gold underline underline-offset-4 hover:text-moss"
                 >
                   Sudah penyewa? Masuk
                 </Link>
               </div>
 
-              <div className="rounded-[1.75rem] bg-pine p-6 text-paper shadow-warm">
+              <div className="rounded-[1.75rem] bg-pine p-6 text-ink shadow-warm">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-paper font-display text-sm font-bold text-pine" aria-hidden>
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gold font-display text-sm font-bold text-[#121212]" aria-hidden>
                     {(admin?.name || 'AD').slice(0, 2).toUpperCase()}
                   </span>
                   <div>
                     <p className="text-sm font-bold">{admin?.name || 'Pengelola'}</p>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-paper/60">Host sejak 2018</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink/60">Host sejak 2018</p>
                   </div>
                 </div>
-                <p className="mt-4 text-[13px] leading-6 text-paper/75">
+                <p className="mt-4 text-[13px] leading-6 text-ink/75">
                   Butuh info survei atau ketersediaan? Chat WhatsApp — kami bantu carikan unit yang paling cocok.
                 </p>
               </div>
@@ -500,7 +500,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
         <div className="mx-auto flex w-full max-w-2xl items-center gap-3">
           <div className="min-w-0 flex-1">
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-fog">Mulai dari</p>
-            <p className="tick truncate font-display text-lg font-semibold tracking-tight text-pine">
+            <p className="tick truncate font-display text-lg font-semibold tracking-tight text-gold">
               {formatRupiah(property.monthlyPriceFrom.toNumber())}
               <span className="ml-1 font-sans text-xs font-normal text-fog">/bln</span>
             </p>

@@ -169,7 +169,7 @@ export default function FAQPage() {
                 {filteredFAQs.map((item, i) => (
                   <details
                     key={`${item.category}-${item.question}`}
-                    className="group rounded-[1.25rem] border hairline bg-white transition-shadow duration-300 open:shadow-warm"
+                    className="group rounded-[1.25rem] border hairline bg-cream transition-shadow duration-300 open:shadow-warm"
                     {...(i === 0 ? { open: true } : {})}
                   >
                     <summary className="flex cursor-pointer list-none items-center gap-4 p-5 pr-6 text-left [&::-webkit-details-marker]:hidden">
@@ -177,14 +177,14 @@ export default function FAQPage() {
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="mb-1.5 inline-block rounded-full bg-pine px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-paper">
+                        <span className="mb-1.5 inline-block rounded-full bg-gold px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#121212]">
                           {CATEGORY_LABEL[item.category]}
                         </span>
                         <span className="block text-[15px] font-bold leading-6 text-ink">
                           {item.question}
                         </span>
                       </span>
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border hairline text-xl font-light leading-none transition-transform duration-300 group-open:rotate-45 group-open:bg-pine group-open:text-paper" aria-hidden>
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border hairline text-xl font-light leading-none transition-transform duration-300 group-open:rotate-45 group-open:bg-gold group-open:text-[#121212]" aria-hidden>
                         +
                       </span>
                     </summary>
@@ -197,27 +197,27 @@ export default function FAQPage() {
             )}
           </div>
 
-          <aside className="h-fit w-full min-w-0 overflow-hidden rounded-[1.75rem] bg-pine p-6 text-paper shadow-warm sm:p-7 lg:sticky lg:top-24">
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-paper/60">Butuh jawaban cepat?</p>
+          <aside className="h-fit w-full min-w-0 overflow-hidden rounded-[1.75rem] bg-pine p-6 text-ink shadow-warm sm:p-7 lg:sticky lg:top-24">
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/60">Butuh jawaban cepat?</p>
             <p className="mt-3 font-display text-2xl font-medium leading-snug">
               Chat langsung ke pengelola.
             </p>
-            <p className="mt-2 text-sm leading-6 text-paper/70">
+            <p className="mt-2 text-sm leading-6 text-ink/70">
               Tanpa bot, dibalas manusia — biasanya di bawah 1 jam.
             </p>
             <a
               href={WA_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-paper px-5 py-3 text-sm font-bold text-pine transition hover:bg-goldsoft"
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-bold text-[#121212] transition hover:bg-[#e6c75a]"
             >
               <WhatsAppIcon className="h-4 w-4" /> 0813-8463-4526
             </a>
-            <p className="mt-3 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-paper/50">08.00–18.00 · Setiap hari</p>
+            <p className="mt-3 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-ink/50">08.00–18.00 · Setiap hari</p>
             <div className="mt-5 border-t border-paper/15 pt-5">
               <Link
                 href="/kontrakan"
-                className="inline-flex w-full items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-bold text-paper ring-1 ring-paper/30 transition hover:bg-paper/10"
+                className="inline-flex w-full items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-bold text-ink ring-1 ring-ink/30 transition hover:bg-ink/10"
               >
                 Lihat unit tersedia <ArrowUpRight className="h-4 w-4" />
               </Link>

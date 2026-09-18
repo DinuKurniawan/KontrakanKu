@@ -209,9 +209,9 @@ export default function TenantModal({ isOpen, onClose, availableUnits }: TenantM
                   onChange={e => setUnitId(e.target.value)}
                   className="w-full rounded-lg border border-stone-200 bg-white px-3.5 py-2.5 text-[14px] font-medium text-stone-900 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/15"
                 >
-                  <option value="">Jangan tugaskan sekarang</option>
+                  <option value="" className="text-stone-900 bg-white">Jangan tugaskan sekarang</option>
                   {availableUnits.map(u => (
-                    <option key={u.id} value={u.id}>{u.property.name} — {u.name}</option>
+                    <option key={u.id} value={u.id} className="text-stone-900 bg-white">{u.property.name} — {u.name}</option>
                   ))}
                 </select>
               )}

@@ -202,7 +202,7 @@ export default function PaymentForm({
           {invoices.map((inv) => {
             const num = inv.amount.toNumber ? inv.amount.toNumber() : inv.amount
             return (
-              <option key={inv.id} value={inv.id}>
+              <option key={inv.id} value={inv.id} className="text-stone-900 bg-white">
                 {inv.invoiceNumber} — Tagihan {formatBillingPeriod(inv.billingPeriod)} ({formatRupiah(num)})
               </option>
             )

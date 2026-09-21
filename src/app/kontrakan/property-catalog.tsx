@@ -1,9 +1,20 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { formatRupiah } from '@/lib/utils'
-import { Building2, MapPin, ArrowUpRight, Search, X, SlidersHorizontal } from 'lucide-react'
+import {
+  Building2,
+  MapPin,
+  Eye,
+  MessageCircle,
+  Bookmark,
+  Search,
+  CheckCircle2,
+  ArrowUpDown,
+  Info,
+  SearchX,
+} from 'lucide-react'
 
 export interface SerializedPublicProperty {
   id: string
@@ -23,246 +34,277 @@ interface PropertyCatalogProps {
   properties: SerializedPublicProperty[]
 }
 
+type StatusFilter = 'all' | 'ready' | 'occupied'
+type SortOrder = 'default' | 'price-asc' | 'price-desc'
+
 export default function PropertyCatalog({ properties }: PropertyCatalogProps) {
   const [search, setSearch] = useState('')
-  const [onlyAvailable, setOnlyAvailable] = useState(false)
-  const [sortOption, setSortOption] = useState<'NEWEST' | 'PRICE_ASC' | 'PRICE_DESC'>('NEWEST')
-  const [maxPrice, setMaxPrice] = useState<number | null>(null)
-  const [selectedFacilities, setSelectedFacilities] = useState<string[]>([])
+  const [status, setStatus] = useState<StatusFilter>('all')
+  const [sort, setSort] = useState<SortOrder>('default')
 
-  const pricePresets: { label: string; value: number | null }[] = [
-    { label: 'Semua harga', value: null },
-    { label: '≤ 1 jt', value: 1_000_000 },
-    { label: '≤ 1,5 jt', value: 1_500_000 },
-    { label: '≤ 2 jt', value: 2_000_000 },
-  ]
-
-  const uniqueFacilities = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          properties.flatMap((p) => [...(p.facilities ?? []), ...((p.units ?? []).flatMap((u) => u.facilities ?? []))])
-        )
-      ).sort((a, b) => a.localeCompare(b, 'id')),
-    [properties]
-  )
-
-  const toggleFacility = (facility: string) => {
-    setSelectedFacilities((prev) => (prev.includes(facility) ? prev.filter((f) => f !== facility) : [...prev, facility]))
-  }
-
-  const filteredProperties = useMemo(() => {
-    const q = search.toLowerCase()
-    const filtered = properties.filter((p) => {
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase()
+    const list = properties.filter((p) => {
       const matchesSearch =
+        q === '' ||
         p.name.toLowerCase().includes(q) ||
         p.address.toLowerCase().includes(q) ||
-        (p.description && p.description.toLowerCase().includes(q))
-      const matchesAvailability = !onlyAvailable || p.availableUnits > 0
-      const matchesPrice = maxPrice === null || p.monthlyPriceFrom <= maxPrice
-      const matchesFacilities = selectedFacilities.every(
-        (f) => p.facilities.includes(f) || (p.units ?? []).some((u) => (u.facilities ?? []).includes(f))
-      )
-      return matchesSearch && matchesAvailability && matchesPrice && matchesFacilities
+        (p.description ?? '').toLowerCase().includes(q)
+      const isReady = p.availableUnits > 0
+      const matchesStatus =
+        status === 'all' || (status === 'ready' ? isReady : !isReady)
+      return matchesSearch && matchesStatus
     })
-    if (sortOption === 'PRICE_ASC') return [...filtered].sort((a, b) => a.monthlyPriceFrom - b.monthlyPriceFrom)
-    if (sortOption === 'PRICE_DESC') return [...filtered].sort((a, b) => b.monthlyPriceFrom - a.monthlyPriceFrom)
-    return filtered
-  }, [properties, search, onlyAvailable, maxPrice, selectedFacilities, sortOption])
+    if (sort === 'price-asc')
+      return [...list].sort((a, b) => a.monthlyPriceFrom - b.monthlyPriceFrom)
+    if (sort === 'price-desc')
+      return [...list].sort((a, b) => b.monthlyPriceFrom - a.monthlyPriceFrom)
+    return list
+  }, [properties, search, status, sort])
 
-  const hasActiveFilter = search !== '' || onlyAvailable || maxPrice !== null || selectedFacilities.length > 0
+  const hasFilter = search.trim() !== '' || status !== 'all'
 
-  function clearAll() {
+  function resetFilters() {
     setSearch('')
-    setOnlyAvailable(false)
-    setMaxPrice(null)
-    setSelectedFacilities([])
-    setSortOption('NEWEST')
+    setStatus('all')
+    setSort('default')
   }
 
   return (
-    <div className="w-full min-w-0">
-      {/* Filter */}
-      <div className="card-dossier !transform-none p-5 sm:p-6">
-        <div className="flex w-full flex-col gap-3 xl:flex-row xl:items-center">
-          <div className="relative w-full min-w-0 flex-1">
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-fog" />
+    <div className="w-full">
+      {/* ——— Filter bar ——— */}
+      <div className="flex flex-col gap-4 rounded-xl bg-white p-4 shadow-sm lg:p-6">
+        <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-12">
+          <div className="relative md:col-span-6">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#717975]" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama atau lokasi — mis. Melati, Cilandak"
-              className="field !rounded-full !py-3 pl-11"
-              aria-label="Cari kontrakan"
+              aria-label="Cari unit"
+              className="w-full rounded-lg border border-[#e0e3e0] bg-[#f7faf6] py-3 pl-11 pr-4 text-sm text-[#181c1b] outline-none transition placeholder:text-[#717975] focus:border-[#013428] focus:ring-2 focus:ring-[#013428]/15"
             />
           </div>
-          <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center xl:w-auto">
-            <label className="inline-flex cursor-pointer items-center gap-2.5 rounded-full border hairline bg-cream px-4 py-2.5 text-sm font-semibold text-bark transition hover:border-gold hover:text-gold">
-              <input
-                type="checkbox"
-                checked={onlyAvailable}
-                onChange={(e) => setOnlyAvailable(e.target.checked)}
-                className="h-4 w-4 accent-[#d4af37]"
-              />
-              Tersedia saja
+          <div className="flex flex-wrap items-center gap-2 md:col-span-6 md:justify-end">
+            <label className="flex items-center gap-1 rounded-lg bg-[#ecefeb] px-3 py-1.5 text-sm font-semibold text-[#181c1b]">
+              <CheckCircle2 className="h-[18px] w-[18px] text-[#404945]" />
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value as StatusFilter)}
+                aria-label="Filter status"
+                className="cursor-pointer bg-transparent focus:outline-none"
+              >
+                <option value="all">Semua Status</option>
+                <option value="ready">Siap Huni Saja</option>
+                <option value="occupied">Waiting List</option>
+              </select>
             </label>
-            <select
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value as typeof sortOption)}
-              className="field !w-full !rounded-full !py-2.5 font-semibold sm:!w-auto"
-              aria-label="Urutkan"
-            >
-              <option value="NEWEST" className="bg-[#1a1a1a] text-[#f5f5f7]">Terbaru</option>
-              <option value="PRICE_ASC" className="bg-[#1a1a1a] text-[#f5f5f7]">Termurah</option>
-              <option value="PRICE_DESC" className="bg-[#1a1a1a] text-[#f5f5f7]">Termahal</option>
-            </select>
+            <label className="flex items-center gap-1 rounded-lg bg-[#ecefeb] px-3 py-1.5 text-sm font-semibold text-[#181c1b]">
+              <ArrowUpDown className="h-[18px] w-[18px] text-[#404945]" />
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value as SortOrder)}
+                aria-label="Urutkan"
+                className="cursor-pointer bg-transparent focus:outline-none"
+              >
+                <option value="default">Rekomendasi</option>
+                <option value="price-asc">Harga Terendah</option>
+                <option value="price-desc">Harga Tertinggi</option>
+              </select>
+            </label>
           </div>
         </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-2 border-t hairline pt-4">
-          <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-fog">
-            <SlidersHorizontal className="h-3.5 w-3.5" /> Harga
-          </span>
-          {pricePresets.map((preset) => {
-            const active = maxPrice === preset.value
-            return (
+        <div className="flex flex-wrap items-center justify-between border-t border-[#ecefeb] pt-2 text-[#404945]">
+          <div className="flex items-center gap-1">
+            <Info className="h-[18px] w-[18px] text-[#974723]" />
+            <span className="text-sm">
+              Seluruh unit dilengkapi meteran listrik terpisah per unit.
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            {hasFilter && (
               <button
-                key={preset.label}
                 type="button"
-                aria-pressed={active}
-                onClick={() => setMaxPrice(preset.value)}
-                className={`chip !py-1.5 !text-xs ${active ? 'chip-on' : ''}`}
+                onClick={resetFilters}
+                className="text-sm font-semibold text-[#013428] underline underline-offset-4 hover:text-[#1e4b3e]"
               >
-                {preset.label}
+                Reset Filter
               </button>
-            )
-          })}
-          {uniqueFacilities.length > 0 && (
-            <>
-              <span className="ml-2 font-mono text-[10px] uppercase tracking-[0.18em] text-fog">Fasilitas</span>
-              {uniqueFacilities.slice(0, 8).map((facility) => {
-                const active = selectedFacilities.includes(facility)
-                return (
-                  <button
-                    key={facility}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => toggleFacility(facility)}
-                    className={`chip !py-1.5 !text-xs ${active ? 'chip-on' : ''}`}
-                  >
-                    {facility}
-                  </button>
-                )
-              })}
-            </>
-          )}
-        </div>
-
-        <div className="mt-4 flex items-center justify-between text-xs text-fog">
-          <p>
-            Menampilkan <span className="tick font-bold text-ink">{filteredProperties.length}</span> dari{' '}
-            {properties.length} kontrakan
-            {hasActiveFilter && <span className="stamp stamp-open ml-2 !py-0.5 !text-[11px]">filter aktif</span>}
-          </p>
-          {hasActiveFilter && (
-            <button
-              type="button"
-              onClick={clearAll}
-              className="btn-elegant-ghost !p-1 text-[13px] font-bold text-gold"
-            >
-              <X className="h-3.5 w-3.5" /> Reset
-            </button>
-          )}
+            )}
+            <span className="rounded-full bg-[#bdeddb]/40 px-3 py-0.5 text-sm font-semibold text-[#013428]">
+              Menampilkan {filtered.length} Unit
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Grid */}
-      {filteredProperties.length === 0 ? (
-        <div className="mt-6 rounded-[1.75rem] border-2 border-dashed border-line bg-paper px-6 py-16 text-center">
-          <Building2 className="mx-auto h-8 w-8 text-fog" />
-          <h3 className="mt-3 font-display text-xl font-semibold text-ink">Tidak ada hasil yang cocok</h3>
-          <p className="mx-auto mt-1 max-w-sm text-sm text-bark">
-            Coba ubah kata kunci atau longgarkan filter harga dan fasilitas.
+      {/* ——— Grid ——— */}
+      {filtered.length === 0 ? (
+        <div className="mt-6 rounded-xl bg-white px-6 py-14 text-center">
+          <SearchX className="mx-auto h-12 w-12 text-[#c0c8c3]" />
+          <h3 className="mt-1 text-lg font-semibold text-[#181c1b]">
+            Tidak Ditemukan Unit yang Sesuai
+          </h3>
+          <p className="mx-auto mt-1 max-w-sm text-sm text-[#404945]">
+            Coba sesuaikan filter ketersediaan atau kata kunci pencarian.
           </p>
           <button
             type="button"
-            onClick={clearAll}
-            className="btn-elegant-primary mt-5"
+            onClick={resetFilters}
+            className="mt-4 rounded-lg bg-[#013428] px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-[#1e4b3e]"
           >
-            Tampilkan semua
+            Reset Filter
           </button>
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {filteredProperties.map((property, idx) => {
-            const hasAvailable = property.availableUnits > 0
-            const unitList = (property.units ?? []).slice().sort((a, b) => a.monthlyRent - b.monthlyRent)
-            const rents = unitList.map((u) => u.monthlyRent)
-            const minRent = rents.length > 0 ? Math.min(...rents) : property.monthlyPriceFrom
-            const maxRent = rents.length > 0 ? Math.max(...rents) : property.monthlyPriceFrom
-            const priceLabel = minRent === maxRent ? formatRupiah(minRent) : `${formatRupiah(minRent)} – ${formatRupiah(maxRent)}`
+        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((property) => {
+            const isReady = property.availableUnits > 0
+            const unitList = [...(property.units ?? [])].sort(
+              (a, b) => a.monthlyRent - b.monthlyRent
+            )
+            const badges = [
+              ...property.facilities,
+              ...unitList.flatMap((u) => u.facilities ?? []),
+            ]
+              .filter((f, i, arr) => arr.indexOf(f) === i)
+              .slice(0, 3)
+            const waUrl = `https://wa.me/6281384634526?text=${encodeURIComponent(
+              `Halo Pengelola, saya tertarik dengan ${property.name} (${formatRupiah(property.monthlyPriceFrom)}/bln). Apakah masih tersedia?`
+            )}`
             return (
               <article
                 key={property.id}
-                className="card-dossier animate-fade-up overflow-hidden"
-                style={{ animationDelay: `${Math.min(idx, 6) * 60}ms` }}
+                className="group flex flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-all hover:shadow-md"
               >
-                <figure className="relative m-0 aspect-[16/10] overflow-hidden bg-sand">
+                <div className="relative h-[480px] w-full overflow-hidden bg-[#e6e9e5]">
                   {property.coverImageUrl ? (
                     <img
                       src={property.coverImageUrl}
                       alt={property.name}
                       loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center">
-                      <Building2 className="h-8 w-8 text-fog" />
+                      <Building2 className="h-8 w-8 text-[#717975]" />
                     </div>
                   )}
-                  <span className={`stamp absolute right-4 top-4 shadow-warm ${hasAvailable ? 'stamp-open' : 'stamp-muted'}`}>
-                    {hasAvailable ? `${property.availableUnits} tersedia` : 'Penuh'}
-                  </span>
-                </figure>
+                  <div className="absolute left-3 top-3">
+                    {isReady ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800 shadow-sm backdrop-blur-md">
+                        <span className="h-2 w-2 rounded-full bg-emerald-600" />
+                        Siap Huni — {property.availableUnits} tersedia
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900 shadow-sm backdrop-blur-md">
+                        <span className="h-2 w-2 rounded-full bg-amber-600" />
+                        Terisi (Daftar Tunggu)
+                      </span>
+                    )}
+                  </div>
+                  <div className="absolute bottom-3 right-3 rounded bg-[#013428]/80 px-3 py-0.5 text-sm font-semibold text-white backdrop-blur-md">
+                    {property.availableUnits}/{property.totalUnits} unit
+                  </div>
+                </div>
 
-                <div className="p-6">
-                  <p className="font-display text-[1.35rem] font-semibold tracking-tight text-gold">
-                    {priceLabel}
-                    <span className="font-sans text-sm font-normal text-fog"> /bulan</span>
-                  </p>
-                  <h2 className="mt-1 text-lg font-bold tracking-tight text-ink">{property.name}</h2>
-                  <p className="mt-1 flex items-center gap-1.5 text-sm text-fog">
-                    <MapPin className="h-3.5 w-3.5 shrink-0" />
-                    <span className="truncate">{property.address}</span>
-                  </p>
-
-                  {unitList.length > 0 && (
-                    <ul className="mt-4 divide-y divide-line rounded-2xl bg-cream/60 px-4">
-                      {unitList.slice(0, 3).map((u) => (
-                        <li key={u.name} className="flex items-center justify-between gap-2 py-2.5 text-[13px]">
-                          <span className="flex min-w-0 items-center gap-2 font-semibold text-ink">
-                            <span
-                              className={`h-2 w-2 shrink-0 rounded-full ${u.status === 'AVAILABLE' ? 'bg-fern' : 'bg-fog/50'}`}
-                              aria-hidden
-                            />
-                            <span className="truncate">{u.name}</span>
+                <div className="flex flex-1 flex-col justify-between p-4">
+                  <div>
+                    <div className="mb-1 flex items-center justify-between">
+                      <span className="text-xs font-semibold text-[#974723]">
+                        {property.totalUnits} Tipe Unit
+                      </span>
+                      <span className="flex items-center gap-1 text-xs text-[#404945]">
+                        <MapPin className="h-4 w-4" />
+                        <span className="max-w-[160px] truncate">{property.address}</span>
+                      </span>
+                    </div>
+                    <h2 className="text-lg font-semibold text-[#181c1b] transition-colors group-hover:text-[#013428]">
+                      {property.name}
+                    </h2>
+                    {property.description && (
+                      <p className="mt-1 line-clamp-2 text-sm text-[#404945]">
+                        {property.description}
+                      </p>
+                    )}
+                    {badges.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {badges.map((b) => (
+                          <span
+                            key={b}
+                            className="rounded bg-[#ecefeb] px-2 py-0.5 text-xs text-[#404945]"
+                          >
+                            {b}
                           </span>
-                          <span className="tick font-bold">{formatRupiah(u.monthlyRent)}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                        ))}
+                      </div>
+                    )}
+                    {unitList.length > 0 && (
+                      <ul className="mt-3 divide-y divide-[#ecefeb] rounded-lg bg-[#f1f4f1] px-3">
+                        {unitList.slice(0, 3).map((u) => (
+                          <li
+                            key={u.name}
+                            className="flex items-center justify-between gap-2 py-2 text-[13px]"
+                          >
+                            <span className="flex min-w-0 items-center gap-2 font-semibold text-[#181c1b]">
+                              <span
+                                aria-hidden
+                                className={`h-2 w-2 shrink-0 rounded-full ${u.status === 'AVAILABLE' ? 'bg-emerald-600' : 'bg-[#717975]/50'}`}
+                              />
+                              <span className="truncate">{u.name}</span>
+                            </span>
+                            <span className="font-bold tabular-nums">
+                              {formatRupiah(u.monthlyRent)}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
 
-                  <div className="mt-5 flex items-center justify-between border-t hairline pt-4">
-                    <span className="tick text-xs text-fog">
-                      {property.availableUnits}/{property.totalUnits} unit tersedia
-                    </span>
-                    <Link
-                      href={`/kontrakan/${property.slug}`}
-                      className="btn-elegant-ghost !p-0 font-bold text-gold"
-                    >
-                      Detail <ArrowUpRight className="h-4 w-4" />
-                    </Link>
+                  <div className="-mb-4 -mx-4 mt-4 flex flex-col gap-2 rounded-b-xl bg-[#f1f4f1] p-4">
+                    <div className="flex items-baseline justify-between">
+                      <div>
+                        <span className="text-xl font-bold text-[#013428]">
+                          {formatRupiah(property.monthlyPriceFrom)}
+                        </span>
+                        <span className="text-sm text-[#404945]">/ bulan</span>
+                      </div>
+                      <span className="rounded bg-[#ffdbce] px-2 py-0.5 text-xs text-[#772f0d]">
+                        Mulai dari
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1">
+                      <Link
+                        href={`/kontrakan/${property.slug}`}
+                        className="flex w-full items-center justify-center gap-1 rounded-lg bg-[#e0e3e0] py-2 text-sm font-semibold text-[#181c1b] transition-colors hover:bg-[#d8dbd7]"
+                      >
+                        <Eye className="h-4 w-4" />
+                        Detail Unit
+                      </Link>
+                      {isReady ? (
+                        <a
+                          href={waUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex w-full items-center justify-center gap-1 rounded-lg bg-[#013428] py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#1e4b3e]"
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                          Tanya WA
+                        </a>
+                      ) : (
+                        <a
+                          href={waUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex w-full items-center justify-center gap-1 rounded-lg bg-[#974723] py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#772f0d]"
+                        >
+                          <Bookmark className="h-4 w-4" />
+                          Waitlist WA
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
               </article>

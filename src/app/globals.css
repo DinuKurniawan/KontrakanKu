@@ -130,7 +130,50 @@ p, li, blockquote { text-wrap: pretty; }
    utilities, so this must live in @layer base — otherwise it would override
    text-stone-* utilities on light admin inputs (white text on white bg). */
 @layer base {
-  input, select, textarea { color: #f5f5f7; }
+  input, select, textarea { color: var(--color-ink); }
+}
+
+/* ————— Public light-elegant theme —————
+   Scoped to public pages via .theme-public on PublicLayout so that
+   /admin/* and /dashboard/* keep the existing dark look.
+   .on-dark restores light-text vars inside deep-green sections. */
+.theme-public {
+  --color-paper: #FAF8F3;
+  --color-cream: #FFFFFF;
+  --color-sand: #F0EBE0;
+  --color-pine: #1E2E27;
+  --color-pinedeep: #14211B;
+  --color-moss: #496A56;
+  --color-fern: #3C5A48;
+  --color-mist: #E6EEE8;
+  --color-gold: #8A6D1F;
+  --color-goldsoft: #F4EAD0;
+  --color-ink: #1F2521;
+  --color-bark: #4C554E;
+  --color-fog: #6F7972;
+  --color-line: #E3DCCD;
+  --shadow-warm: 0 1px 2px rgb(31 37 33 / 0.06), 0 12px 32px -12px rgb(31 37 33 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(31 37 33 / 0.08), 0 24px 48px -16px rgb(31 37 33 / 0.22);
+  --shadow-glow: 0 8px 30px -8px rgb(138 109 31 / 0.25);
+  color-scheme: light;
+}
+
+.theme-public option {
+  background: #FFFFFF;
+  color: #1F2521;
+}
+
+.on-dark {
+  --color-ink: #F5F3EC;
+  --color-bark: #D5D2C7;
+  --color-fog: #A9A89B;
+  --color-line: rgb(245 243 236 / 0.16);
+  --color-gold: #D4AF37;
+  --color-moss: #D4AF37;
+  --color-fern: #E6C75A;
+  --color-mist: rgb(245 243 236 / 0.1);
+  --shadow-warm: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 32px -12px rgb(0 0 0 / 0.6);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.5), 0 24px 48px -16px rgb(0 0 0 / 0.65);
 }
 
 /* ————— Editorial primitives ————— */
@@ -164,58 +207,68 @@ p, li, blockquote { text-wrap: pretty; }
 
 .card-dossier {
   @apply border rounded-[1.75rem] transition-all duration-300;
-  background: #1a1a1a;
+  background: var(--color-cream);
   border-color: var(--color-line);
   box-shadow: var(--shadow-warm);
 }
 .card-dossier:hover {
   box-shadow: var(--shadow-lift);
   transform: translateY(-3px);
-  border-color: #d4af37;
+  border-color: var(--color-gold);
 }
 
 .stamp {
   @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold;
 }
 .stamp-live {
-  background: #d4af37;
+  background: var(--color-gold);
   color: #121212;
 }
+.theme-public .stamp-live { color: #FFFFFF; }
+.on-dark .stamp-live,
+.on-dark .chip-on {
+  color: #14211B !important;
+}
 .stamp-open {
-  background: rgb(212 175 55 / 0.12);
-  color: #e6c75a;
-  border: 1px solid #6b5a22;
+  background: rgb(73 106 86 / 0.1);
+  color: var(--color-fern);
+  border: 1px solid rgb(73 106 86 / 0.35);
 }
 .stamp-muted {
-  background: #2a2a2a;
-  color: #c9c9c9;
+  background: var(--color-sand);
+  color: var(--color-bark);
   border: 1px solid var(--color-line);
 }
 
 .field {
   @apply w-full rounded-2xl border px-4 py-3 text-sm outline-none transition-all duration-200;
-  background: #1a1a1a;
+  background: var(--color-cream);
   border-color: var(--color-line);
-  color: #f5f5f7;
+  color: var(--color-ink);
 }
-.field::placeholder { color: #6b6b6b; }
+.field::placeholder { color: var(--color-fog); opacity: 0.8; }
 .field:focus {
-  border-color: #d4af37;
-  background: #222222;
-  box-shadow: 0 0 0 4px rgb(212 175 55 / 0.18);
+  border-color: var(--color-gold);
+  background: var(--color-cream);
+  box-shadow: 0 0 0 4px rgb(138 109 31 / 0.16);
 }
 
 .chip {
   @apply inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[13px] font-medium transition-all duration-200;
   border-color: var(--color-line);
-  background: #1a1a1a;
-  color: #c9c9c9;
+  background: var(--color-cream);
+  color: var(--color-bark);
 }
-.chip:hover { border-color: #d4af37; color: #f5f5f7; }
+.chip:hover { border-color: var(--color-gold); color: var(--color-ink); }
 .chip-on {
-  background: #d4af37 !important;
-  border-color: #d4af37 !important;
+  background: var(--color-gold) !important;
+  border-color: var(--color-gold) !important;
   color: #121212 !important;
+}
+.theme-public .chip-on {
+  background: #1E2E27 !important;
+  border-color: #1E2E27 !important;
+  color: #FFFFFF !important;
 }
 
 .tick {
@@ -248,18 +301,27 @@ p, li, blockquote { text-wrap: pretty; }
   box-shadow: 0 8px 24px -8px rgb(212 175 55 / 0.5);
 }
 .btn-elegant-primary:hover { background: #e6c75a; color: #121212; box-shadow: 0 12px 32px -8px rgb(212 175 55 / 0.55); }
+/* Public light theme: deep-green primary for a calm professional feel */
+.theme-public .btn-elegant-primary {
+  background: #1E2E27;
+  color: #FFFFFF;
+  box-shadow: 0 8px 24px -8px rgb(30 46 39 / 0.5);
+}
+.theme-public .btn-elegant-primary:hover { background: #3C5A48; color: #FFFFFF; }
+.on-dark .btn-elegant-primary { background: #D4AF37; color: #14211B; }
+.on-dark .btn-elegant-primary:hover { background: #E6C75A; color: #14211B; }
 .btn-elegant-outline {
   @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 cursor-pointer px-5 py-2.5 text-sm hover:bg-cream active:bg-sand;
-  background: #1a1a1a;
+  background: var(--color-cream);
   border: 1px solid var(--color-line);
-  color: #f5f5f7;
+  color: var(--color-ink);
 }
-.btn-elegant-outline:hover { border-color: #d4af37; }
+.btn-elegant-outline:hover { border-color: var(--color-gold); }
 .btn-elegant-ghost {
   @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 cursor-pointer px-5 py-2.5 text-sm;
-  color: #c9c9c9;
+  color: var(--color-bark);
 }
-.btn-elegant-ghost:hover { background: #2a2a2a; color: #d4af37; }
+.btn-elegant-ghost:hover { background: var(--color-mist); color: var(--color-fern); }
 .btn-elegant-sm { @apply px-4 py-2 text-[13px]; }
 .btn-elegant-xs { @apply px-3 py-1.5 text-xs; }
 
@@ -281,6 +343,27 @@ p, li, blockquote { text-wrap: pretty; }
 .badge-elegant-success { background: rgb(212 175 55 / 0.12); color: #e6c75a; border: 1px solid #6b5a22; }
 .badge-elegant-neutral { background: #2a2a2a; color: #c9c9c9; border: 1px solid var(--color-line); }
 .badge-elegant-outline { background: #1a1a1a; color: #c9c9c9; border: 1px solid var(--color-line); }
+.theme-public .badge-elegant-success {
+  background: rgb(73 106 86 / 0.1);
+  color: #3C5A48;
+  border: 1px solid rgb(73 106 86 / 0.35);
+}
+.theme-public .badge-elegant-neutral,
+.theme-public .badge-elegant-outline {
+  background: #F0EBE0;
+  color: #4C554E;
+  border: 1px solid var(--color-line);
+}
+.theme-public .input-elegant {
+  background: #FFFFFF;
+  color: #1F2521;
+}
+.theme-public .text-gradient {
+  background: linear-gradient(120deg, #1F2521 0%, #496A56 60%, #8A6D1F 115%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
 .section-divider {
   @apply w-full border-t;
@@ -346,6 +429,9 @@ p, li, blockquote { text-wrap: pretty; }
   outline: 2px solid #d4af37;
   outline-offset: 3px;
   border-radius: 4px;
+}
+.theme-public *:focus-visible {
+  outline-color: #496A56;
 }
 
 @media (prefers-reduced-motion: reduce) {

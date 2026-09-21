@@ -18,9 +18,9 @@ export const WA_LINK =
 export function SiteLogo({ compact = false, onDark = false }: { compact?: boolean; onDark?: boolean }) {
   return (
     <Link href="/" className="group flex items-center gap-2.5" aria-label="Kelola Kontrakan — Beranda">
-      <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-gold text-[#121212] shadow-warm transition-transform duration-300 group-hover:-rotate-6">
+      <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-pine text-white shadow-warm transition-transform duration-300 group-hover:-rotate-6">
         <KeyRound className="h-[18px] w-[18px] -rotate-45" strokeWidth={2.2} />
-        <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-[#121212] ring-2 ring-gold" aria-hidden />
+        <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-gold ring-2 ring-paper" aria-hidden />
       </span>
       <span className="leading-none">
         <span className={`block font-display text-[17px] font-semibold tracking-tight ${onDark ? 'text-ink' : 'text-ink'}`}>
@@ -65,22 +65,6 @@ export default function PublicNavbar() {
 
   return (
     <>
-      <div className="w-full bg-pine text-ink">
-        <p className="shell flex items-center justify-center gap-2 py-2 text-center font-mono text-[10px] uppercase tracking-[0.2em] sm:justify-between sm:text-[11px]">
-          <span className="hidden items-center gap-2 text-ink/70 sm:inline-flex">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-gold" />
-            Unit terawat · Cilandak, Jakarta Selatan
-          </span>
-          <span className="inline-flex items-center gap-2">
-            Respon &lt;1 jam
-            <span aria-hidden className="text-ink/40">·</span>
-            Survei hari yang sama
-          </span>
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="hidden items-center gap-1 font-semibold text-ink underline-offset-4 hover:underline sm:inline-flex">
-            0813-8463-4526 <ArrowUpRight className="h-3 w-3" />
-          </a>
-        </p>
-      </div>
       <header
         className={`sticky top-0 z-50 w-full transition-all duration-300 ${
           scrolled
@@ -101,8 +85,8 @@ export default function PublicNavbar() {
                   aria-current={active ? 'page' : undefined}
                   className={`inline-flex items-center rounded-full px-5 py-2 text-sm font-semibold transition-all duration-200 ${
                     active
-                      ? 'bg-gold text-[#121212] shadow-warm'
-                      : 'text-bark hover:bg-cream hover:text-ink'
+                      ? 'bg-pine text-white shadow-warm'
+                      : 'text-bark hover:bg-sand hover:text-ink'
                   }`}
                 >
                   {l.label}
@@ -141,7 +125,7 @@ export default function PublicNavbar() {
                     href={l.href}
                     className={`flex items-center justify-between rounded-2xl px-5 py-3.5 transition ${
                       active
-                        ? 'bg-gold text-[#121212]'
+                        ? 'bg-pine text-white'
                         : 'bg-cream text-ink border hairline'
                     }`}
                   >

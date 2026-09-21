@@ -15,6 +15,11 @@ const SLIDES = [
 export default function HeroCarousel() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
   const touchX = useRef<number | null>(null);
   const count = SLIDES.length;
 
@@ -23,10 +28,17 @@ export default function HeroCarousel() {
   const next = useCallback(() => goTo(index + 1), [goTo, index]);
 
   useEffect(() => {
-    if (paused) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  useEffect(() => {
+    if (paused || reduceMotion) return;
     const t = setTimeout(() => setIndex((i) => (i + 1) % count), DURATION);
     return () => clearTimeout(t);
-  }, [paused, index, count]);
+  }, [paused, reduceMotion, index, count]);
 
   return (
     <div
@@ -63,7 +75,7 @@ export default function HeroCarousel() {
               fill
               priority={i === 0}
               sizes="(max-width: 1024px) 100vw, 50vw"
-              className={`object-cover ${i === index ? "hero-zoom" : ""}`}
+              className={`object-cover ${i === index && !reduceMotion ? "hero-zoom" : ""}`}
             />
             <div
               className="absolute inset-0 bg-gradient-to-t from-pinedeep/50 via-pinedeep/5 to-transparent"

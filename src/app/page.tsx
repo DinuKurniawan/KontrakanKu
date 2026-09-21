@@ -2,106 +2,136 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatRupiah } from "@/lib/utils";
 import {
-  Building2,
-  MapPin,
-  ArrowUpRight,
   ArrowRight,
-  KeyRound,
-  Droplets,
-  Wifi,
-  Car,
-  Clock3,
-  Star,
-  ShieldCheck,
   BadgeCheck,
+  Building2,
+  Handshake,
+  MapPin,
+  MessageCircle,
+  Navigation,
+  ShieldCheck,
+  Trees,
+  TrainFront,
+  Store,
+  Hospital,
+  GraduationCap,
+  Map as MapIcon,
+  Phone,
+  Clock3,
+  CircleCheck,
+  Users,
 } from "lucide-react";
 import { PropertyStatus } from "@prisma/client";
 import PublicLayout from "@/components/public-layout";
-import HeroCarousel from "@/components/hero-carousel";
-import TestimonialCarousel from "./testimonial-carousel";
+import GriyaHero from "./griya-hero";
+import GriyaTestimonials from "./griya-testimonials";
+
+const STATS = [
+  { value: "18 Unit", title: "Pilihan Hunian", desc: "Asri, sejuk & nyaman keluarga" },
+  { value: "98%", title: "Tingkat Hunian", desc: "Penyewa betah & puas bertahan" },
+  { value: "5 Menit", title: "Akses Kilat", desc: "Ke KRL stasiun & minimarket" },
+  { value: "100%", title: "Dikelola Langsung", desc: "Tanpa perantara & bebas calo" },
+];
+
+const VALUES = [
+  {
+    icon: Trees,
+    bg: "bg-[#bdeddb] text-[#013428]",
+    title: "Lingkungan Asri & Ramah Anak",
+    desc: "Dikelilingi pepohonan rimbun, sirkulasi angin segar, serta halaman dalam tertutup yang aman bagi balita dan anak-anak bermain santai tanpa lalu-lalang kendaraan cepat.",
+  },
+  {
+    icon: Navigation,
+    bg: "bg-[#ffdbce] text-[#974723]",
+    title: "Akses Fasilitas Lengkap",
+    desc: "Hanya 3 menit jalan kaki ke minimarket (Alfamart/Indomaret), 5 menit ke Pasar Tradisional dan Stasiun Commuter Line, mempermudah mobilitas harian Anda.",
+  },
+  {
+    icon: ShieldCheck,
+    bg: "bg-[#bdeddb] text-[#013428]",
+    title: "Keamanan 24 Jam & Portal",
+    desc: "Pintu gerbang satu akses (one gate system), portal malam tertutup rapat, serta pantauan CCTV aktif 24 jam di titik masuk dan lorong bersama untuk ketenangan tidur Anda.",
+  },
+  {
+    icon: Handshake,
+    bg: "bg-[#ffdeae] text-[#281900]",
+    title: "Pengelola Siaga & Tanggap",
+    desc: "Rumah pemilik berada di kompleks yang sama. Segala kendala seperti pompa air, lampu taman, atau perbaikan kecil langsung tertangani cepat tanpa birokrasi berbelit.",
+  },
+];
 
 const FACILITIES = [
   {
-    icon: Wifi,
-    title: "WiFi tiap blok",
-    desc: "Router sendiri per blok kontrakan — cukup untuk kerja dan kuliah daring dari kamar.",
-    tag: "Konektivitas",
+    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDud47LpIS0psfJqqvzd8fYBrrCuSmXG1kxLbw5Ic8-2dWvEG7Ng2CrHb2DND6U_3V9qiCcI-4tkR27q1fg2qfq-v6eazjYSCVshlBf9qzSTX7Cjkofn_mMSQqhxVXtIfLjRwieDyuz_VpKHRfRFUUMJAyifE1uBaVS-IkJPv3UNhzofvbDIZvR8kXk7_JA4nUhdxOK9QOp_ZR959RypmPB1y5t_L7kUoWNk-aVkOU",
+    alt: "Taman tengah dan gazebo warga",
+    tag: "Area Hijau & Santai",
+    title: "Taman Tengah & Gazebo Warga",
+    desc: "Tempat bersantai sore, membaca buku, atau sekadar menghirup udara segar bersama keluarga.",
+    span: "md:col-span-7",
+    h: "h-[440px]",
   },
   {
-    icon: KeyRound,
-    title: "Kunci tercatat",
-    desc: "Gembok dan duplikat dicatat di buku. Serah terima kunci dicek bersama saat masuk dan keluar.",
-    tag: "Keamanan",
+    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCBEvQqCJ_Lk3ijzenJdy_NwqnHAo91Qy89qRE9ec5UFwq8bAa6LkYNgQwrFi5nyL1RcELEQZZyouHpyIRTe-Q2xI8oAcyO3aZoGGB2xYxqwIAHDqPlAiobJg0jCpCzBGQog8_c1V8ZbgLPejbP-2ssFuE3Jgl_x8KIgTNOKmig3fQoLCU7xnSDLtSEfL-V8-Oe3E20OOlcdfsQAFAfpllTLHfdAcWU4tsz72ZD8j0",
+    alt: "Parkiran motor berkanopi",
+    tag: "Parkir Rapi",
+    title: "Parkiran Motor Berkanopi",
+    desc: "Terlindung dari hujan terik dan diawasi CCTV 24 jam non-stop.",
+    span: "md:col-span-5",
+    h: "h-[440px]",
   },
   {
-    icon: Droplets,
-    title: "Air & token mandiri",
-    desc: "Air bersih sudah termasuk. Token listrik per kamar — bayar sesuai pakai, tidak patungan.",
-    tag: "Utilitas",
+    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCvzN_w2VgVNxCQ3tg1kl0MsJ-z_KxI3U_ZhtlHgGnSRIIEdpAAdafIi8lbokg9_csjoVQDosyZCTsPZZzV3C_uZuHiFlOKMGee6fUzKcGdLQ5p-IAZZRkB4m24TtwgfY7USU87FIdDfq5e-FEMFPiW-DdoSlL3cRMcuOEklRTS10eVWE0utwgGkvA9_7F2y7HNQRyv0djrwcRIDlYBBQ-6OJ6vWWehNkedhWnaKfg",
+    alt: "Area jemuran terlindung",
+    tag: "Area Jemuran Terlindung",
+    title: "Bebas Khawatir Hujan",
+    desc: "Jemuran cepat kering berkat atap transparan.",
+    span: "md:col-span-4",
+    h: "h-[380px]",
   },
   {
-    icon: Car,
-    title: "Parkir & jalan lebar",
-    desc: "Motor dan mobil bisa masuk. Lingkungan bebas banjir, dekat stasiun dan minimarket.",
-    tag: "Lokasi",
-  },
-];
-
-const STEPS = [
-  {
-    no: "01",
-    title: "Pilih di katalog",
-    desc: "Foto asli, harga mulai yang jelas, sisa unit diperbarui berkala. Yang tertulis tersedia memang tersedia.",
+    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCh43x-hiE1fhKauyHARFZdehdYAyXWOFUjy3upZrnvYLLQZQg8BPNJon8mit8xv9C1nWIR8OjT_5EkiJvYwEHak1DW1wgxEOsG0L-XQrsDo8sJlY2SJocL7Q-0ev1d7dgYq3XlabdO1A4OolcMrdCgghPVQbqn7P3xUsTIlLxdLlnjCMFD7bAyFkIUEUdULe-Y2VTa9DfqGLyL0i-kD64cyTDUxIJfsS4IWrFsRRo",
+    alt: "Mushola dekat lokasi",
+    tag: "Mushola Dekat",
+    title: "1 Menit Jalan Kaki",
+    desc: "Ibadah harian berjamaah lebih mudah dan tenang.",
+    span: "md:col-span-4",
+    h: "h-[380px]",
   },
   {
-    no: "02",
-    title: "Survei di hari yang sama",
-    desc: "Chat 0813-8463-4526, janjian pukul 08.00–18.00, lalu cek air, listrik, dan tetangga langsung di lokasi.",
-  },
-  {
-    no: "03",
-    title: "Akad & pantau tagihan",
-    desc: "Transfer ke BCA, Mandiri, BNI, atau BRI, upload bukti dari HP, pantau status sampai LUNAS.",
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    code: "A-01",
-    name: "Andi Pratama",
-    unit: "Mawar · 2 tahun",
-    text: "Token mandiri jadi tidak rebutan listrik dengan kamar sebelah. Tagihan bisa dicek sendiri, tidak perlu nagih ke siapa-siapa.",
-  },
-  {
-    code: "K-5",
-    name: "Siti Rahayu",
-    unit: "Melati · 1 tahun",
-    text: "Wastafel mampet, lapor jam 9 pagi lewat WA, sore sudah beres. Selama ini begitu terus — cepat ditangani.",
-  },
-  {
-    code: "B-02",
-    name: "Budi Santoso",
-    unit: "Anggrek · 3 tahun",
-    text: "Bayar sewa tinggal transfer lalu foto bukti dari HP. Besoknya status sudah LUNAS. Riwayatnya rapi kalau mau perpanjang.",
+    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuB4Or2ybH3wzARyCSN1aeZLQ4vfN87qWnwtemZvcBVEhkuE-PStCnyX-Vw-aJbecyXb6oqyTVUxUEu2IiGXKIstdmMj1RTiKeE6bonjhPcO85hpfcPVJwbgxMm-fahtt9a2r_fLYIvdXhsne81jx6u4XrYcSIXOmUn6kPgKZrWeb7iH8mUiVyAEYFrEN2rqY9O8yqBQoxNC_h2NCB1QBya_0aDoT7L0YE6FIp9AKko",
+    alt: "Gerbang dan CCTV keamanan",
+    tag: "Pantauan Keamanan",
+    title: "CCTV & Portal Gerbang",
+    desc: "Tamu wajib lapor, lingkungan aman terlindungi.",
+    span: "md:col-span-4",
+    h: "h-[380px]",
   },
 ];
 
-const FAQ_ITEMS = [
+const ACCESS = [
   {
-    q: "Apakah unit benar-benar siap huni?",
-    a: "Unit dengan status tersedia sudah dibersihkan serta dicek listrik dan airnya sebelum ditawarkan.",
+    icon: TrainFront,
+    bg: "bg-[#bdeddb] text-[#013428]",
+    title: "5 Menit ke Stasiun Commuter Line",
+    desc: "Mudah akses harian menuju Jakarta, Sudirman, dan Bogor tanpa macet.",
   },
   {
-    q: "Bagaimana cara survei?",
-    a: "Buka halaman Unit, pilih kontrakan, lalu hubungi pengelola via WhatsApp untuk jadwal survei 08.00–18.00 WIB.",
+    icon: Store,
+    bg: "bg-[#ffdbce] text-[#974723]",
+    title: "3 Menit ke Minimarket & ATM",
+    desc: "Alfamart, Indomaret, apotek, dan anjungan ATM 24 jam siap jalan kaki.",
   },
   {
-    q: "Bagaimana pembayarannya?",
-    a: "Transfer ke rekening resmi (BCA / Mandiri / BNI / BRI), upload bukti, lalu diverifikasi admin.",
+    icon: Hospital,
+    bg: "bg-[#ffdeae] text-[#281900]",
+    title: "7 Menit ke Rumah Sakit & Klinik",
+    desc: "Fasilitas kesehatan rujukan 24 jam untuk kesiapsiagaan seluruh anggota keluarga.",
   },
   {
-    q: "Perlu akun dulu?",
-    a: "Akun dibuatkan pengelola saat akad. Masuk dengan email untuk memantau tagihan bulanan.",
+    icon: GraduationCap,
+    bg: "bg-[#e6e9e5] text-[#013428]",
+    title: "4 Menit ke SD, SMP, & TK Islam",
+    desc: "Sangat ramah anak, antar-jemput sekolah lebih hemat waktu dan bahan bakar.",
   },
 ];
 
@@ -120,143 +150,70 @@ export default async function HomePage() {
 
   return (
     <PublicLayout>
-      {/* ————— HERO ————— */}
-      <section className="relative w-full overflow-x-clip border-b hairline">
-        <div className="shell relative grid w-full gap-10 pb-14 pt-10 sm:pt-14 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-14 lg:pb-20 lg:pt-16">
-          <div className="min-w-0">
-            <p className="eyebrow">Cilandak · Dikelola sejak 2018</p>
-            <h1 className="mt-5 font-display text-[2.75rem] font-medium leading-[1.02] tracking-tight text-ink sm:text-6xl lg:text-[4.4rem]">
-              Tinggal tenang
-              <br />
-              di <em className="font-light italic text-moss">selatan</em> Jakarta.
-            </h1>
-            <p className="mt-5 max-w-md text-base leading-7 text-bark sm:text-lg sm:leading-8">
-              Kontrakan keluarga yang terawat — token mandiri per kamar,
-              tagihan tercatat satu per satu, dan pengelola yang menjawab
-              langsung via WhatsApp.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link href="/kontrakan" className="btn-elegant-primary !px-7 !py-3.5 !text-[15px]">
-                Lihat unit tersedia <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link href="/login" className="btn-elegant-outline !px-7 !py-3.5 !text-[15px]">
-                Masuk
-              </Link>
-            </div>
-            <dl className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3 text-[13px]">
-              <div className="flex items-center gap-1.5">
-                <Star className="h-4 w-4 fill-gold text-gold" aria-hidden />
-                <dt className="sr-only">Skor ulasan</dt>
-                <dd><span className="font-bold text-ink">4.9/5</span> <span className="text-fog">· 18 ulasan</span></dd>
-              </div>
-              <div className="hidden h-4 w-px bg-line sm:block" aria-hidden />
-              <div className="flex items-center gap-1.5">
-                <Clock3 className="h-4 w-4 text-moss" aria-hidden />
-                <dt className="sr-only">Waktu respon</dt>
-                <dd className="font-semibold text-ink">Respon {"<1 jam"}</dd>
-              </div>
-              <div className="hidden h-4 w-px bg-line sm:block" aria-hidden />
-              <div className="flex items-center gap-1.5">
-                <ShieldCheck className="h-4 w-4 text-moss" aria-hidden />
-                <dd className="font-semibold text-ink">Langsung pengelola</dd>
-              </div>
-            </dl>
-          </div>
+      {/* ————— HERO BANNER CAROUSEL FULL WIDTH ————— */}
+      <GriyaHero />
 
-          <div className="relative min-w-0">
-            <div className="absolute -inset-3 rounded-[2.5rem] border hairline" aria-hidden />
-            <HeroCarousel />
-            <div className="absolute -left-3 top-8 z-20 sm:-left-6">
-              <div className="stamp stamp-live -rotate-2 shadow-lift !px-4 !py-2.5 ring-1 ring-[#121212]/30">
-                <span className="inline-block h-2 w-2 rounded-full bg-[#121212]" aria-hidden />
-                Siap survei minggu ini
-              </div>
-            </div>
-            <div className="absolute -bottom-5 left-5 right-5 z-20 sm:left-8 sm:right-auto">
-              <div className="flex items-center gap-3 rounded-2xl border hairline bg-cream/95 px-4 py-3 shadow-lift backdrop-blur">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-mist">
-                  <BadgeCheck className="h-5 w-5 text-moss" />
-                </span>
-                <div className="text-[13px] leading-tight">
-                  <p className="font-bold text-ink">Difoto ulang tiap unit keluar</p>
-                  <p className="text-fog">Bukan foto stok lama</p>
+      {/* ————— STATS OVERLAP ————— */}
+      <section className="relative z-20 -mt-10 mb-6 w-full bg-[#f7faf6] px-4 lg:px-8">
+        <div className="w-full">
+          <div className="rounded-2xl border border-[#e0e3e0] bg-white p-4 shadow-lg sm:p-6">
+            <div className="grid grid-cols-2 items-center gap-4 md:grid-cols-4">
+              {STATS.map((s, i) => (
+                <div
+                  key={s.title}
+                  className={`flex flex-col items-center p-2 text-center ${
+                    i > 0 ? "md:border-l md:border-[#e0e3e0]" : ""
+                  }`}
+                >
+                  <span className="text-2xl font-bold tracking-tight text-[#013428]">
+                    {s.value}
+                  </span>
+                  <span className="mt-0.5 text-lg font-semibold text-[#013428]">
+                    {s.title}
+                  </span>
+                  <p className="text-sm text-[#404945]">{s.desc}</p>
                 </div>
-              </div>
+              ))}
             </div>
-          </div>
-        </div>
-
-        <div className="border-y hairline bg-cream/60">
-          <div className="shell flex w-full flex-col items-center justify-between gap-2 py-3.5 text-[13px] sm:flex-row">
-            <p className="text-bark">
-              Pembayaran transfer manual —{" "}
-              <span className="font-bold text-ink">BCA · Mandiri · BNI · BRI</span>
-            </p>
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">
-              Bukti terverifikasi admin · tercatat rapi
-            </p>
           </div>
         </div>
       </section>
 
-      {/* ————— STATS ————— */}
-      <section className="w-full bg-paper">
-        <div className="shell w-full py-12 sm:py-16">
-          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[1.75rem] border hairline bg-line shadow-warm lg:grid-cols-4">
-            {[
-              { v: "2018", l: "Berdiri sejak", s: "Dikelola keluarga" },
-              { v: "120+", l: "Penyewa tercatat", s: "Tertib administrasi" },
-              { v: "<1 jam", l: "Rata-rata balasan", s: "Chat langsung direspons" },
-              { v: "4.9/5", l: "Skor kepuasan", s: "Dari ulasan terverifikasi" },
-            ].map((s) => (
-              <div key={s.l} className="bg-cream px-6 py-7 sm:px-8">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-fog">{s.l}</p>
-                <p className="mt-2 font-display text-4xl font-medium tracking-tight text-gold sm:text-[2.75rem]">
-                  {s.v}
-                </p>
-                <p className="mt-1 text-[13px] text-fog">{s.s}</p>
-              </div>
-            ))}
+      {/* ————— KEUNGGULAN ————— */}
+      <section className="w-full bg-[#f1f4f1] py-10">
+        <div className="w-full px-4 lg:px-8">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <span className="mb-1 text-sm font-semibold uppercase tracking-wider text-[#974723]">
+              Keunggulan Hunian
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight text-[#013428]">
+              Kenyamanan Seperti Rumah Sendiri
+            </h2>
+            <p className="mt-1 max-w-2xl text-base text-[#404945]">
+              Kami mendesain dan mengelola Griya Teduh dengan mengedepankan
+              keamanan anak-anak, privasi tiap keluarga, dan kebersihan
+              lingkungan harian.
+            </p>
           </div>
-        </div>
-      </section>
-
-      {/* ————— FACILITIES BENTO ————— */}
-      <section className="w-full bg-paper">
-        <div className="shell w-full pb-14 sm:pb-20">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div className="max-w-xl">
-              <p className="eyebrow">Fasilitas</p>
-              <h2 className="mt-4 font-display text-3xl font-medium tracking-tight text-ink sm:text-[2.75rem] sm:leading-[1.05]">
-                Semua yang Anda butuhkan, sudah tersedia.
-              </h2>
-            </div>
-            <Link href="/kontrakan" className="btn-elegant-ghost !px-2 text-gold">
-              Jelajahi unit <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {FACILITIES.map((f, idx) => {
-              const Icon = f.icon;
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {VALUES.map((v) => {
+              const Icon = v.icon;
               return (
                 <div
-                  key={f.title}
-                  className="card-dossier animate-fade-up group p-6 sm:p-7"
-                  style={{ animationDelay: `${idx * 90}ms` }}
+                  key={v.title}
+                  className="flex flex-col rounded-xl bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <div className="flex items-start justify-between">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cream transition-colors duration-300 group-hover:bg-gold group-hover:text-[#121212]">
-                      <Icon className="h-[22px] w-[22px]" />
-                    </span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-fog">
-                      {f.tag}
-                    </span>
+                  <div
+                    className={`mb-4 flex h-12 w-12 items-center justify-center rounded-lg ${v.bg}`}
+                  >
+                    <Icon className="h-7 w-7" />
                   </div>
-                  <h3 className="mt-6 font-display text-xl font-semibold tracking-tight text-ink">
-                    {f.title}
+                  <h3 className="mb-1 text-xl font-semibold text-[#013428]">
+                    {v.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-6 text-bark">{f.desc}</p>
+                  <p className="text-sm leading-relaxed text-[#404945]">
+                    {v.desc}
+                  </p>
                 </div>
               );
             })}
@@ -264,214 +221,326 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ————— FEATURED ————— */}
-      <section className="w-full border-y hairline bg-cream/50">
-        <div className="shell w-full py-14 sm:py-20">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+      {/* ————— PILIHAN UNIT ————— */}
+      <section className="w-full bg-[#f7faf6] py-10">
+        <div className="w-full px-4 lg:px-8">
+          <div className="mb-6 flex flex-col justify-between gap-2 md:flex-row md:items-end">
             <div>
-              <p className="eyebrow">Unit pilihan</p>
-              <h2 className="mt-4 font-display text-3xl font-medium tracking-tight sm:text-[2.75rem] sm:leading-[1.05]">
-                Tersedia minggu ini
+              <span className="mb-1 block text-sm font-semibold uppercase tracking-wider text-[#974723]">
+                Ketersediaan Unit
+              </span>
+              <h2 className="text-3xl font-bold tracking-tight text-[#013428]">
+                Pilihan Tipe Unit Populer
               </h2>
-              <p className="mt-2 text-sm text-bark">
-                Foto asli, siap survei kapan saja.
-              </p>
             </div>
-            <Link href="/kontrakan" className="btn-elegant-outline hidden sm:inline-flex">
-              Lihat semua <ArrowRight className="h-4 w-4" />
+            <Link
+              href="/kontrakan"
+              className="inline-flex items-center gap-1 text-base font-semibold text-[#013428] transition-colors hover:text-[#1e4b3e]"
+            >
+              Lihat Seluruh Tipe & Spesifikasi
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
 
           {featuredProperties.length === 0 ? (
-            <div className="mt-8 rounded-[1.75rem] border-2 border-dashed border-line bg-paper px-6 py-16 text-center">
-              <Building2 className="mx-auto h-6 w-6 text-fog" />
-              <p className="mt-3 text-sm text-bark">
+            <div className="rounded-2xl border-2 border-dashed border-[#c0c8c3] bg-white px-6 py-16 text-center">
+              <Building2 className="mx-auto h-6 w-6 text-[#717975]" />
+              <p className="mt-3 text-sm text-[#404945]">
                 Belum ada kontrakan tayang. Hubungi pengelola untuk info stok.
               </p>
             </div>
           ) : (
-            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {featuredProperties.map((p, idx) => {
-                const available = p.units.filter((u) => u.status === "AVAILABLE").length;
-                const total = p.units.length;
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {featuredProperties.map((p) => {
+                const available = p.units.filter(
+                  (u) => u.status === "AVAILABLE"
+                ).length;
                 return (
-                  <article
+                  <div
                     key={p.id}
-                    className="card-dossier animate-fade-up overflow-hidden"
-                    style={{ animationDelay: `${idx * 90}ms` }}
+                    className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all hover:shadow-md"
                   >
-                    <figure className="relative m-0 aspect-[16/10] overflow-hidden bg-sand">
+                    <div className="relative aspect-[16/10] w-full overflow-hidden">
                       {p.images[0]?.url ? (
                         <img
                           src={p.images[0].url}
                           alt={p.name}
                           loading="lazy"
-                          className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center">
-                          <Building2 className="h-8 w-8 text-fog" />
+                        <div className="flex h-full w-full items-center justify-center bg-[#ecefeb]">
+                          <Building2 className="h-8 w-8 text-[#717975]" />
                         </div>
                       )}
-                      <span className={`stamp absolute right-4 top-4 shadow-warm ${
-                        available > 0 ? "stamp-open" : "stamp-muted"
-                      }`}>
-                        {available > 0 && (
-                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-moss" aria-hidden />
-                        )}
-                        {available > 0 ? `${available} tersedia` : "Penuh"}
-                      </span>
-                    </figure>
-                    <div className="p-6">
-                      <p className="font-display text-[1.4rem] font-semibold tracking-tight text-gold">
-                        {formatRupiah(p.monthlyPriceFrom.toNumber())}
-                        <span className="font-sans text-sm font-normal text-fog"> /bulan</span>
-                      </p>
-                      <h3 className="mt-1.5 text-lg font-bold tracking-tight text-ink">
-                        {p.name}
-                      </h3>
-                      <p className="mt-1 flex items-center gap-1.5 text-sm text-fog">
+                      <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#013428] shadow-sm backdrop-blur-sm">
+                        <span
+                          className={`h-2 w-2 rounded-full ${
+                            available > 0 ? "bg-[#1e4b3e]" : "bg-[#ba1a1a]"
+                          }`}
+                        />
+                        {available > 0
+                          ? `Tersedia ${available} Unit`
+                          : "Penuh (Antrian Buka)"}
+                      </div>
+                    </div>
+                    <div className="flex flex-1 flex-col p-4">
+                      <div className="mb-1 flex items-baseline justify-between">
+                        <h3 className="text-lg font-bold text-[#013428]">
+                          {p.name}
+                        </h3>
+                        <div className="text-right">
+                          <span className="text-xl font-bold text-[#013428]">
+                            {formatRupiah(p.monthlyPriceFrom.toNumber())}
+                          </span>
+                          <span className="-mt-1 block text-sm text-[#404945]">
+                            /bulan
+                          </span>
+                        </div>
+                      </div>
+                      <p className="mb-2 flex items-center gap-1.5 text-sm text-[#717975]">
                         <MapPin className="h-3.5 w-3.5 shrink-0" />
                         <span className="truncate">{p.address}</span>
                       </p>
                       {p.description && (
-                        <p className="mt-2 line-clamp-2 text-sm leading-6 text-bark">
+                        <p className="mb-4 line-clamp-2 text-sm text-[#404945]">
                           {p.description}
                         </p>
                       )}
-                      <div className="mt-5 flex items-center justify-between border-t hairline pt-4">
-                        <span className="tick text-xs text-fog">
-                          {available}/{total} unit tersedia
-                        </span>
+                      <div className="mt-auto flex items-center gap-2">
                         <Link
                           href={`/kontrakan/${p.slug}`}
-                          className="btn-elegant-ghost !p-0 font-bold text-gold"
+                          className="flex h-11 flex-1 items-center justify-center rounded-lg bg-[#013428] px-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#1e4b3e]"
                         >
-                          Detail <ArrowUpRight className="h-4 w-4" />
+                          Detail Unit
                         </Link>
+                        <a
+                          href="https://wa.me/6281234567890"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Tanya via WA"
+                          className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#ecefeb] text-[#013428] transition-colors hover:bg-[#e6e9e5]"
+                        >
+                          <MessageCircle className="h-5 w-5" />
+                        </a>
                       </div>
                     </div>
-                  </article>
+                  </div>
                 );
               })}
             </div>
           )}
-          <Link href="/kontrakan" className="btn-elegant-outline mt-6 w-full sm:hidden">
-            Lihat semua unit
-          </Link>
         </div>
       </section>
 
-      {/* ————— STEPS ————— */}
-      <section className="w-full bg-paper">
-        <div className="shell w-full py-14 sm:py-20">
-          <p className="eyebrow">Cara sewa</p>
-          <h2 className="mt-4 max-w-2xl font-display text-3xl font-medium tracking-tight sm:text-[2.75rem] sm:leading-[1.05]">
-            Tiga langkah sampai serah terima kunci.
-          </h2>
-          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {STEPS.map((s, idx) => (
-              <div
-                key={s.no}
-                className="card-dossier animate-fade-up p-7"
-                style={{ animationDelay: `${idx * 90}ms` }}
-              >
-                <span className="tick text-xs font-semibold text-moss">Langkah {s.no} / 03</span>
-                <h3 className="mt-3 font-display text-xl font-semibold text-ink">{s.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-bark">{s.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ————— TESTIMONIALS ————— */}
-      <section className="w-full bg-pine">
-        <div className="shell w-full py-14 sm:py-20">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow">Cerita penyewa</p>
-              <h2 className="mt-4 font-display text-3xl font-medium tracking-tight text-ink sm:text-[2.75rem] sm:leading-[1.05]">
-                Dipercaya sejak 2018.
-              </h2>
-            </div>
-            <p className="tick text-sm text-ink/60">18 ulasan · rata-rata 4.9</p>
-          </div>
-
-          <div className="mt-10" aria-label="Testimoni penyewa">
-            <TestimonialCarousel items={TESTIMONIALS} />
-          </div>
-        </div>
-      </section>
-
-      {/* ————— FAQ PREVIEW ————— */}
-      <section className="w-full bg-paper">
-        <div className="shell grid w-full gap-10 py-14 sm:py-20 lg:grid-cols-[1fr_1.5fr] lg:gap-14">
-          <div className="lg:sticky lg:top-32 lg:self-start">
-            <p className="eyebrow">FAQ</p>
-            <h2 className="mt-4 font-display text-3xl font-medium tracking-tight sm:text-4xl">
-              Pertanyaan yang sering ditanyakan.
+      {/* ————— FASILITAS BENTO ————— */}
+      <section className="w-full bg-[#f1f4f1] py-10">
+        <div className="w-full px-4 lg:px-8">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <span className="mb-1 text-sm font-semibold uppercase tracking-wider text-[#974723]">
+              Fasilitas Bersama
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight text-[#013428]">
+              Suasana Sejuk, Tenang, & Terawat
             </h2>
-            <p className="mt-3 max-w-sm text-sm leading-6 text-bark">
-              Tidak menemukan jawaban? Hubungi kami langsung via WhatsApp — dibalas manusia, bukan bot.
+            <p className="mt-1 max-w-2xl text-base text-[#404945]">
+              Setiap sudut dirancang agar Anda bisa beristirahat tenang setelah
+              lelah beraktivitas seharian di luar rumah.
             </p>
-            <Link href="/faq" className="btn-elegant-primary mt-6">
-              Lihat semua FAQ <ArrowRight className="h-4 w-4" />
-            </Link>
           </div>
-          <div className="space-y-3">
-            {FAQ_ITEMS.map((f, i) => (
-              <details
-                key={f.q}
-                className="group rounded-[1.25rem] border hairline bg-cream transition-shadow duration-300 open:shadow-warm"
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
+            {FACILITIES.map((f) => (
+              <div
+                key={f.title}
+                className={`group relative overflow-hidden rounded-2xl bg-white shadow-sm ${f.span} ${f.h}`}
               >
-                <summary className="flex cursor-pointer list-none items-center gap-4 p-5 pr-6 text-left font-semibold text-[15px] text-ink [&::-webkit-details-marker]:hidden">
-                  <span className="tick shrink-0 rounded-full bg-cream px-2.5 py-1 text-[11px] text-bark">
-                    {String(i + 1).padStart(2, "0")}
+                <img
+                  src={f.src}
+                  alt={f.alt}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-[#013428]/90 via-[#013428]/30 to-transparent p-6 text-white">
+                  <span className="mb-1 inline-flex items-center gap-1 text-sm font-semibold text-[#bdeddb]">
+                    {f.tag}
                   </span>
-                  <span className="flex-1">{f.q}</span>
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border hairline text-xl font-light leading-none transition-transform duration-300 group-open:rotate-45 group-open:bg-gold group-open:text-[#121212]" aria-hidden>
-                    +
-                  </span>
-                </summary>
-                <div className="px-5 pb-5 pl-[4.25rem] text-sm leading-6 text-bark">
-                  <p>{f.a}</p>
+                  <h3 className="text-xl font-bold">{f.title}</h3>
+                  <p className="max-w-md text-sm text-[#e6e9e5]">{f.desc}</p>
                 </div>
-              </details>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ————— CTA ————— */}
-      <section className="w-full bg-paper">
-        <div className="shell w-full pb-16 sm:pb-24">
-          <div className="relative overflow-hidden rounded-[2rem] border border-pine bg-pine px-6 py-12 text-center sm:px-12 sm:py-16">
-            <div className="relative">
-              <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink/60">
-                Jl. Cilandak Barat No. 28
-              </p>
-              <h2 className="mx-auto mt-4 max-w-2xl font-display text-3xl font-medium tracking-tight text-ink sm:text-5xl sm:leading-[1.05]">
-                Lihat unitnya langsung <em className="font-light italic">minggu ini.</em>
-              </h2>
-              <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-bark">
-                Survei pukul 08.00–18.00, setiap hari. Janjian via WhatsApp,
-                putuskan dengan tenang setelah lihat sendiri.
-              </p>
-              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
-                <Link
-                  href="/kontrakan"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-3.5 text-[15px] font-bold text-[#121212] transition hover:bg-[#e6c75a] sm:w-auto"
-                >
-                  Lihat kontrakan <ArrowUpRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/login"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-bold text-ink ring-1 ring-ink/40 transition hover:bg-ink/10 sm:w-auto"
-                >
-                  Masuk
-                </Link>
+      {/* ————— TESTIMONI ————— */}
+      <section className="w-full bg-[#f7faf6] py-10">
+        <div className="w-full px-4 lg:px-8">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <span className="mb-1 text-sm font-semibold uppercase tracking-wider text-[#974723]">
+              Kisah Penghuni
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight text-[#013428]">
+              Apa Kata Mereka yang Sudah Tinggal?
+            </h2>
+            <p className="mt-1 max-w-xl text-base text-[#404945]">
+              Bukan sekadar hubungan penyewa dan pemilik, kami saling menjaga
+              rasa hormat dan kenyamanan bertetangga.
+            </p>
+          </div>
+          <div className="mt-2">
+            <GriyaTestimonials />
+          </div>
+        </div>
+      </section>
+
+      {/* ————— LOKASI & AKSES ————— */}
+      <section className="w-full bg-[#f1f4f1] py-10">
+        <div className="grid w-full grid-cols-1 items-center gap-6 px-4 lg:grid-cols-12 lg:px-8">
+          <div className="flex flex-col lg:col-span-6">
+            <span className="mb-1 text-sm font-semibold uppercase tracking-wider text-[#974723]">
+              Lokasi & Akses
+            </span>
+            <h2 className="mb-2 text-3xl font-bold tracking-tight text-[#013428]">
+              Semua Kebutuhan Hidup Berada Dalam Jangkauan Singkat
+            </h2>
+            <p className="mb-6 leading-relaxed text-[#404945]">
+              Berada di kawasan pemukiman Sukamaju, Cilodong yang tenang namun
+              hanya hitungan menit dari jalur utama arteri dan sentra
+              transportasi publik.
+            </p>
+            <div className="space-y-2">
+              {ACCESS.map((a) => {
+                const Icon = a.icon;
+                return (
+                  <div
+                    key={a.title}
+                    className="flex items-center gap-4 rounded-xl bg-white p-3 shadow-sm"
+                  >
+                    <div
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${a.bg}`}
+                    >
+                      <Icon className="h-[22px] w-[22px]" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold leading-tight text-[#013428]">
+                        {a.title}
+                      </h4>
+                      <p className="text-sm text-[#404945]">{a.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="flex flex-col lg:col-span-6">
+            <div className="flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm">
+              <div className="relative h-[420px] w-full overflow-hidden rounded-xl shadow-inner">
+                <iframe
+                  title="Peta lokasi Griya Teduh"
+                  src="https://maps.google.com/maps?q=Jl.%20Melati%20Indah%20Sukamaju%20Cilodong%20Depok&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                  className="absolute inset-0 h-full w-full border-0"
+                />
+                <div className="pointer-events-none absolute bottom-3 left-3 flex items-center gap-2 rounded-lg bg-[#f7faf6]/90 px-3 py-1.5 shadow-sm backdrop-blur-md">
+                  <MapPin className="h-[18px] w-[18px] text-[#013428]" />
+                  <span className="text-xs font-semibold text-[#181c1b]">
+                    Griya Teduh, Cilodong
+                  </span>
+                </div>
               </div>
+              <div className="flex flex-col items-start justify-between gap-2 pt-1 sm:flex-row sm:items-center">
+                <div className="flex items-start gap-1 text-sm text-[#404945]">
+                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[#013428]" />
+                  Jl. Melati Indah No. 14, RT 03 / RW 07, Sukamaju, Depok
+                </div>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Jl.+Melati+Indah+Sukamaju+Cilodong+Depok"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-[#013428] hover:text-[#1e4b3e]"
+                >
+                  Buka Petunjuk Arah
+                  <MapIcon className="h-[18px] w-[18px]" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ————— CTA SURVEI ————— */}
+      <section className="w-full bg-[#f7faf6] py-10">
+        <div className="w-full px-4 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl bg-[#013428] p-6 text-white shadow-xl sm:p-10">
+            <div className="relative z-10 flex max-w-2xl flex-col items-start">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#bdeddb]/20 px-3 py-1 text-[#bdeddb]">
+                <Users className="h-4 w-4" />
+                <span className="text-xs font-semibold">
+                  Survei Terbuka Setiap Hari (08.00 - 18.00 WIB)
+                </span>
+              </div>
+              <h2 className="mb-2 text-3xl font-bold tracking-tight">
+                Tertarik atau Ingin Melihat Suasana Langsung?
+              </h2>
+              <p className="mb-6 text-lg leading-relaxed text-[#e6e9e5]">
+                Datang dan rasakan sendiri keteduhan lingkungan Griya Teduh.
+                Tanpa perantara calo, langsung disambut oleh Bapak/Ibu
+                pengelola dengan secangkir teh hangat.
+              </p>
+              <div className="flex w-full flex-col items-stretch gap-4 sm:w-auto sm:flex-row sm:items-center">
+                <a
+                  href="https://wa.me/6281234567890?text=Halo%20Pak%20Rahman,%20saya%20mau%20janjian%20survei%20ke%20Griya%20Teduh%20hari%20ini/besok"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-white px-8 text-base font-bold text-[#013428] shadow-md transition-all hover:bg-[#f1f4f1]"
+                >
+                  <MessageCircle className="h-[22px] w-[22px]" />
+                  Hubungi Pengelola via WhatsApp
+                </a>
+                <div className="flex items-center justify-center gap-1 text-xs text-[#e6e9e5] sm:justify-start">
+                  <CircleCheck className="h-[18px] w-[18px]" />
+                  Survei Bebas Biaya (Gratis)
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ————— INFO KONTAK RINGKAS ————— */}
+      <section className="w-full bg-[#f7faf6]">
+        <div className="mx-auto grid w-full max-w-[1200px] gap-4 px-4 pb-14 sm:grid-cols-3 lg:px-8">
+          <div className="flex items-center gap-3 rounded-2xl border border-[#e0e3e0] bg-white p-5">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#bdeddb] text-[#013428]">
+              <MapPin className="h-5 w-5" />
+            </span>
+            <div className="text-sm">
+              <p className="font-bold text-[#013428]">Jl. Melati Indah No. 14</p>
+              <p className="text-[#717975]">Sukamaju, Cilodong, Depok</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 rounded-2xl border border-[#e0e3e0] bg-white p-5">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#ffdbce] text-[#974723]">
+              <Phone className="h-5 w-5" />
+            </span>
+            <div className="text-sm">
+              <p className="font-bold text-[#013428]">(0812) 3456-7890</p>
+              <p className="text-[#717975]">Bpk. H. Rahman & Ibu Siti</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 rounded-2xl border border-[#e0e3e0] bg-white p-5">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#ffdeae] text-[#281900]">
+              <Clock3 className="h-5 w-5" />
+            </span>
+            <div className="text-sm">
+              <p className="font-bold text-[#013428]">Survei 08.00 - 18.00 WIB</p>
+              <p className="flex items-center gap-1 text-[#717975]">
+                <BadgeCheck className="h-3.5 w-3.5" /> Mohon kabari 1 jam
+                sebelumnya
+              </p>
             </div>
           </div>
         </div>

@@ -104,7 +104,7 @@ export default function GalleryViewer({ images, propertyName }: GalleryViewerPro
               key={active.url}
               src={active.url}
               alt={active.altText || `${propertyName} foto ${selectedIndex + 1}`}
-              className="h-[560px] w-full bg-black object-contain sm:h-[680px]"
+              className="h-[600px] w-full bg-black object-contain sm:h-[720px]"
               draggable={false}
             />
           </button>
@@ -116,7 +116,7 @@ export default function GalleryViewer({ images, propertyName }: GalleryViewerPro
               onClick={handleShare}
               aria-label={copied ? 'Tautan tersalin' : 'Bagikan'}
               title={copied ? 'Tautan tersalin' : 'Bagikan'}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-ink/90 text-[#121212] shadow-warm backdrop-blur transition hover:bg-gold"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#1F2521] shadow-warm backdrop-blur transition hover:bg-pine hover:text-white"
             >
               {copied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
             </button>
@@ -127,7 +127,7 @@ export default function GalleryViewer({ images, propertyName }: GalleryViewerPro
               aria-label={saved ? 'Hapus dari simpanan' : 'Simpan'}
               title={saved ? 'Tersimpan' : 'Simpan'}
               className={`flex h-10 w-10 items-center justify-center rounded-full shadow-warm backdrop-blur transition ${
-                saved ? 'bg-gold text-[#121212]' : 'bg-ink/90 text-[#121212] hover:bg-gold'
+                saved ? 'bg-pine text-white' : 'bg-white/90 text-[#1F2521] hover:bg-pine hover:text-white'
               }`}
             >
               <Bookmark className={`h-4 w-4 ${saved ? 'fill-current' : ''}`} />
@@ -137,7 +137,7 @@ export default function GalleryViewer({ images, propertyName }: GalleryViewerPro
               onClick={() => setLightboxOpen(true)}
               aria-label="Lihat semua foto"
               title="Lihat semua foto"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-ink/90 text-[#121212] shadow-warm backdrop-blur transition hover:bg-gold"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#1F2521] shadow-warm backdrop-blur transition hover:bg-pine hover:text-white"
             >
               <Expand className="h-4 w-4" />
             </button>
@@ -150,7 +150,7 @@ export default function GalleryViewer({ images, propertyName }: GalleryViewerPro
                 type="button"
                 onClick={showPrev}
                 aria-label="Foto sebelumnya"
-                className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-ink/90 text-[#121212] shadow-warm backdrop-blur transition hover:bg-gold"
+                className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1F2521] shadow-warm backdrop-blur transition hover:bg-pine hover:text-white"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
@@ -158,7 +158,7 @@ export default function GalleryViewer({ images, propertyName }: GalleryViewerPro
                 type="button"
                 onClick={showNext}
                 aria-label="Foto berikutnya"
-                className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-gold text-[#121212] shadow-warm backdrop-blur transition hover:bg-[#e6c75a]"
+                className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-pine text-white shadow-warm backdrop-blur transition hover:bg-fern"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
@@ -269,7 +269,7 @@ export default function GalleryViewer({ images, propertyName }: GalleryViewerPro
               type="button"
               onClick={closeLightbox}
               aria-label="Tutup foto"
-              className="absolute right-2 top-2 flex h-10 w-10 items-center justify-center rounded-full bg-gold text-[#121212] shadow-lift transition hover:bg-[#e6c75a]"
+              className="absolute right-2 top-2 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#1F2521] shadow-lift transition hover:bg-pine hover:text-white"
             >
               <X className="h-5 w-5" />
             </button>
@@ -279,7 +279,7 @@ export default function GalleryViewer({ images, propertyName }: GalleryViewerPro
                   type="button"
                   onClick={showPrev}
                   aria-label="Foto sebelumnya"
-                  className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-ink/90 text-[#121212] shadow-lift transition hover:bg-gold"
+                  className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1F2521] shadow-lift transition hover:bg-pine hover:text-white"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
@@ -287,7 +287,7 @@ export default function GalleryViewer({ images, propertyName }: GalleryViewerPro
                   type="button"
                   onClick={showNext}
                   aria-label="Foto berikutnya"
-                  className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-gold text-[#121212] shadow-lift transition hover:bg-[#e6c75a]"
+                  className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-pine text-white shadow-lift transition hover:bg-fern"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>

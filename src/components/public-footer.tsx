@@ -13,7 +13,7 @@ const NAV = [
 
 export default function PublicFooter() {
   return (
-    <footer className="w-full bg-pine text-ink">
+    <footer className="on-dark w-full bg-pine text-ink">
       <div className="shell w-full pb-10 pt-14 sm:pt-20">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-xl">
